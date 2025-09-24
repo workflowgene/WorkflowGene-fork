@@ -1,0 +1,273 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Background Colors */
+    --color-background: #FFFFFF; /* white */
+    --color-foreground: #1F2937; /* gray-800 */
+    --color-surface: #F8FAFC; /* slate-50 */
+    --color-card: #FFFFFF; /* white */
+    --color-card-foreground: #1F2937; /* gray-800 */
+    --color-popover: #FFFFFF; /* white */
+    --color-popover-foreground: #1F2937; /* gray-800 */
+    
+    /* Border and Input Colors */
+    --color-border: #E5E7EB; /* gray-200 */
+    --color-input: #FFFFFF; /* white */
+    --color-ring: #2563EB; /* blue-600 */
+    
+    /* Muted Colors */
+    --color-muted: #F8FAFC; /* slate-50 */
+    --color-muted-foreground: #6B7280; /* gray-500 */
+    
+    /* Primary Brand Colors */
+    --color-primary: #2563EB; /* blue-600 */
+    --color-primary-foreground: #FFFFFF; /* white */
+    
+    /* Secondary Colors */
+    --color-secondary: #1E293B; /* slate-800 */
+    --color-secondary-foreground: #F8FAFC; /* slate-50 */
+    
+    /* Accent Colors */
+    --color-accent: #3B82F6; /* blue-500 */
+    --color-accent-foreground: #FFFFFF; /* white */
+    
+    /* State Colors */
+    --color-success: #10B981; /* emerald-500 */
+    --color-success-foreground: #FFFFFF; /* white */
+    
+    --color-warning: #F59E0B; /* amber-500 */
+    --color-warning-foreground: #FFFFFF; /* white */
+    
+    --color-error: #EF4444; /* red-500 */
+    --color-error-foreground: #FFFFFF; /* white */
+    
+    --color-destructive: #EF4444; /* red-500 */
+    --color-destructive-foreground: #FFFFFF; /* white */
+    
+    /* Text Colors */
+    --color-text-primary: #1F2937; /* gray-800 */
+    --color-text-secondary: #6B7280; /* gray-500 */
+    
+    /* Additional Brand Colors */
+    --color-trust-builder: #64748B; /* slate-500 */
+    --color-conversion-accent: #059669; /* emerald-600 */
+    --color-cta-urgent: #DC2626; /* red-600 */
+    
+    /* Animation Variables */
+    --animation-duration-fast: 0.15s;
+    --animation-duration-normal: 0.3s;
+    --animation-duration-slow: 0.6s;
+    --animation-duration-slower: 1.2s;
+    
+    /* Spacing Variables */
+    --spacing-xs: 0.5rem; /* 8px */
+    --spacing-sm: 0.75rem; /* 12px */
+    --spacing-md: 1.25rem; /* 20px */
+    --spacing-lg: 2rem; /* 32px */
+    --spacing-xl: 3.25rem; /* 52px */
+    
+    /* Border Radius Variables */
+    --radius-sm: 0.25rem; /* 4px */
+    --radius-md: 0.5rem; /* 8px */
+    --radius-lg: 1rem; /* 16px */
+    --radius-xl: 1.5rem; /* 24px */
+  }
+
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-text-primary;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  p, span, div {
+    @apply text-text-primary;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  /* DNA Helix Animation */
+  .dna-helix {
+    animation: helix-rotate 20s linear infinite;
+  }
+  
+  @keyframes helix-rotate {
+    from {
+      transform: rotateY(0deg);
+    }
+    to {
+      transform: rotateY(360deg);
+    }
+  }
+  
+  /* Organic Button Hover */
+  .btn-organic {
+    transition: all var(--animation-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-organic:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+  }
+  
+  /* Genetic Navigation Underline */
+  .nav-genetic::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    transform: scaleX(0);
+    transition: transform var(--animation-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: left;
+  }
+  
+  .nav-genetic:hover::after {
+    transform: scaleX(1);
+  }
+  
+  /* Organic Card Morphing */
+  .card-organic {
+    border-radius: var(--radius-md);
+    transition: all var(--animation-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-organic:hover {
+    border-radius: var(--radius-xl);
+    transform: scale(1.02);
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+  }
+  
+  /* Evolutionary Scroll Reveal */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all var(--animation-duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Genetic Memory Stagger */
+  .stagger-1 { transition-delay: 0.2s; }
+  .stagger-2 { transition-delay: 0.3s; }
+  .stagger-3 { transition-delay: 0.5s; }
+  .stagger-4 { transition-delay: 0.8s; }
+  
+  /* Micro Evolution Interactions */
+  .micro-evolution {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .micro-evolution::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all var(--animation-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .micro-evolution:hover::before {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Adaptive Color Genetics */
+  .color-evolution-primary {
+    color: var(--color-primary);
+    transition: color var(--animation-duration-normal) ease-in-out;
+  }
+  
+  .color-evolution-primary:hover {
+    color: #1D4ED8; /* blue-700 */
+  }
+  
+  /* Organic Shadow System */
+  .shadow-organic-sm {
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.08);
+  }
+  
+  .shadow-organic-md {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+  }
+  
+  .shadow-organic-lg {
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.08);
+  }
+  
+  /* Typography Weight Animation */
+  .font-genetic {
+    font-variation-settings: 'wght' 300;
+    transition: font-variation-settings var(--animation-duration-normal) ease-in-out;
+  }
+  
+  .font-genetic.activated {
+    font-variation-settings: 'wght' 700;
+  }
+}
+
+@layer utilities {
+  /* Custom Spacing Utilities */
+  .space-genetic-xs { margin: var(--spacing-xs); }
+  .space-genetic-sm { margin: var(--spacing-sm); }
+  .space-genetic-md { margin: var(--spacing-md); }
+  .space-genetic-lg { margin: var(--spacing-lg); }
+  .space-genetic-xl { margin: var(--spacing-xl); }
+  
+  /* Custom Border Radius */
+  .rounded-genetic-sm { border-radius: var(--radius-sm); }
+  .rounded-genetic-md { border-radius: var(--radius-md); }
+  .rounded-genetic-lg { border-radius: var(--radius-lg); }
+  .rounded-genetic-xl { border-radius: var(--radius-xl); }
+  
+  /* Performance Optimizations */
+  .will-change-transform { will-change: transform; }
+  .will-change-opacity { will-change: opacity; }
+  .will-change-auto { will-change: auto; }
+  
+  /* Accessibility Utilities */
+  .focus-genetic:focus {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  
+  .sr-only-genetic {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
