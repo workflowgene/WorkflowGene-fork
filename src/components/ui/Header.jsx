@@ -44,39 +44,9 @@ const Header = () => {
   const Logo = () => (
     <Link to="/homepage" className="flex items-center space-x-3 group" onClick={closeMenu}>
       <div className="relative">
-        <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-genetic-md flex items-center justify-center dna-helix">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-white"
-          >
-            <path
-              d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"
-              fill="currentColor"
-            />
-            <path
-              d="M12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8Z"
-              fill="currentColor"
-              fillOpacity="0.6"
-            />
-            <path
-              d="M12 22L10.91 15.74L4 15L10.91 14.26L12 8L13.09 14.26L20 15L13.09 15.74L12 22Z"
-              fill="currentColor"
-              fillOpacity="0.3"
-            />
-          </svg>
+        <div className="w-50 h-10 rounded-genetic-md flex items-center justify-center">
+          <img src="/assets/logos/WorkflowGene Logo.png" />
         </div>
-      </div>
-      <div className="flex flex-col">
-        <span className="text-xl font-genetic-bold text-text-primary group-hover:color-evolution-primary transition-colors duration-genetic-normal">
-          WorkflowGene
-        </span>
-        <span className="text-sm font-genetic-medium text-text-secondary -mt-1">
-          Cloud
-        </span>
       </div>
     </Link>
   );
