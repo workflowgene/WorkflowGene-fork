@@ -13,12 +13,12 @@ const Header = () => {
     { name: 'Features', path: '/features', icon: 'Zap' },
     { name: 'Industries', path: '/industries', icon: 'Building2' },
     { name: 'Pricing', path: '/pricing', icon: 'DollarSign' },
-    { name: 'Resources', path: '/resources', icon: 'BookOpen' },
+    { name: 'Contact', path: '/contact', icon: 'MessageCircle' }
   ];
 
   const secondaryItems = [
     { name: 'About', path: '/about', icon: 'Info' },
-    { name: 'Contact', path: '/contact', icon: 'MessageCircle' }
+    { name: 'Resources', path: '/resources', icon: 'BookOpen' }
   ];
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const Header = () => {
             {/* More Menu */}
             <div className="relative group">
               <button className="flex items-center space-x-1 px-3 py-2 text-sm font-genetic-medium text-text-secondary hover:text-text-primary transition-colors duration-genetic-normal">
-                <span>Conmpany</span>
+                <span>Company</span>
                 <Icon name="ChevronDown" size={16} />
               </button>
               
