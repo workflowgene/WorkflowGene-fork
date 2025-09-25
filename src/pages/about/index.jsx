@@ -61,11 +61,8 @@ const About = () => {
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-genetic-md flex items-center justify-center">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white">
-                      <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
-                    </svg>
+                    <img src="/assets/logos/Workflow Gene.pg"></img>
                   </div>
-                  <span className="text-lg font-bold text-white">WorkflowGene Cloud</span>
                 </div>
                 <p className="text-sm text-gray-300">
                   The DNA of smart business automation, empowering organizations to evolve and focus on growth.
