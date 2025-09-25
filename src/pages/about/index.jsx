@@ -60,7 +60,7 @@ const About = () => {
               {/* Company Info */}
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-genetic-md flex items-center justify-center">
+                  <div className="w-40 h-10 rounded-genetic-md flex items-center justify-center">
                     <img src="/assets/logos/Workflow Gene.png"></img>
                   </div>
                 </div>
