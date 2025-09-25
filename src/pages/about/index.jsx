@@ -61,7 +61,7 @@ const About = () => {
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-genetic-md flex items-center justify-center">
-                    <img src="/assets/logos/Workflow Gene.pg"></img>
+                    <img src="/assets/logos/Workflow Gene.png"></img>
                   </div>
                 </div>
                 <p className="text-sm text-gray-300">
