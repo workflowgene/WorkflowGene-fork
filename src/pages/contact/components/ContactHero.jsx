@@ -11,7 +11,7 @@ const ContactHero = () => {
         <div className="absolute top-40 right-20 w-24 h-24 border border-accent/20 rounded-full"></div>
         <div className="absolute bottom-20 left-1/4 w-16 h-16 border border-primary/20 rounded-full"></div>
       </div>
-
+      
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
           {/* Badge */}
@@ -19,7 +19,7 @@ const ContactHero = () => {
             <Icon name="MessageCircle" size={16} />
             <span>We're Here to Help</span>
           </div>
-
+          
           {/* Main Heading */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary mb-6 leading-tight">
             Get in Touch with
@@ -27,12 +27,12 @@ const ContactHero = () => {
               Our Expert Team
             </span>
           </h1>
-
+          
           {/* Description */}
           <p className="text-xl text-text-secondary mb-8 leading-relaxed max-w-3xl mx-auto">
             Whether you're ready to start your automation journey, need technical support, or want to explore partnership opportunities, we're here to help you succeed.
           </p>
-
+          
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button 
@@ -53,7 +53,7 @@ const ContactHero = () => {
               Start Live Chat
             </Button>
           </div>
-
+          
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-8 border-t border-border">
             <div className="text-center">
@@ -76,7 +76,6 @@ const ContactHero = () => {
         </div>
       </div>
     </section>
-  )
   );
 };
 
