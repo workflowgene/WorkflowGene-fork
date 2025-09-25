@@ -13,7 +13,8 @@ const Header = () => {
     { name: 'Features', path: '/features', icon: 'Zap' },
     { name: 'Industries', path: '/industries', icon: 'Building2' },
     { name: 'Pricing', path: '/pricing', icon: 'DollarSign' },
-    { name: 'Resources', path: '/resources', icon: 'BookOpen' }
+    { name: 'Resources', path: '/resources', icon: 'BookOpen' },
+    { name: 'Contact', path: '/contact', icon: 'MessageCircle' }
   ];
 
   const secondaryItems = [

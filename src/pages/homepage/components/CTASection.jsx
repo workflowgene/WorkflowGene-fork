@@ -1,25 +1,8 @@
 import React, { useState } from 'react';
 import Button from '../../../components/ui/Button';
-import Input from '../../../components/ui/Input';
 import Icon from '../../../components/AppIcon';
 
 const CTASection = () => {
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-
-  const handleEmailSubmit = async (e) => {
-    e?.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setIsSubscribed(true);
-    setEmail('');
-  };
-
   const benefits = [
     {
       icon: 'Clock',
@@ -138,59 +121,6 @@ const CTASection = () => {
           ))}
         </div>
 
-        {/* Newsletter Signup */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-genetic-xl p-8 lg:p-12 scroll-reveal stagger-3">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Icon name="Mail" size={32} className="text-white" />
-            </div>
-            
-            <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-              Stay Updated with Automation Insights
-            </h3>
-            
-            <p className="text-white/80 mb-8">
-              Get weekly tips, industry trends, and exclusive workflow templates delivered to your inbox.
-            </p>
-
-            {!isSubscribed ? (
-              <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <div className="flex-1">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={email}
-                    onChange={(e) => setEmail(e?.target?.value)}
-                    required
-                    className="bg-white/20 border-white/30 text-white placeholder-white/60"
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  variant="secondary"
-                  loading={isSubmitting}
-                  iconName="ArrowRight"
-                  iconPosition="right"
-                  className="bg-white text-primary hover:bg-white/90"
-                >
-                  Subscribe
-                </Button>
-              </form>
-            ) : (
-              <div className="bg-success/20 border border-success/30 rounded-genetic-md p-4 max-w-md mx-auto">
-                <div className="flex items-center justify-center space-x-2 text-white">
-                  <Icon name="CheckCircle" size={20} className="text-success" />
-                  <span>Thank you for subscribing!</span>
-                </div>
-              </div>
-            )}
-
-            <p className="text-white/60 text-sm mt-4">
-              Join 25,000+ automation enthusiasts. Unsubscribe anytime.
-            </p>
-          </div>
-        </div>
-
         {/* Final CTA */}
         <div className="text-center mt-16 scroll-reveal stagger-4">
           <div className="max-w-3xl mx-auto">
@@ -215,11 +145,11 @@ const CTASection = () => {
               <Button
                 variant="outline"
                 size="lg"
-                iconName="Phone"
+                iconName="MessageCircle"
                 iconPosition="left"
                 className="border-white/30 text-white hover:bg-white/10"
               >
-                Talk to Sales
+                Contact Us
               </Button>
             </div>
           </div>
