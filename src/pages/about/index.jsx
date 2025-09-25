@@ -61,7 +61,7 @@ const About = () => {
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-40 h-10 rounded-genetic-md flex items-center justify-center">
-                    <img src="/assets/logos/Workflow Gene.png"></img>
+                    <img src="/assets/logos/WorkflowGene Logo.png"></img>
                   </div>
                 </div>
                 <p className="text-sm text-gray-300">
