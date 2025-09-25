@@ -14,11 +14,11 @@ const Header = () => {
     { name: 'Industries', path: '/industries', icon: 'Building2' },
     { name: 'Pricing', path: '/pricing', icon: 'DollarSign' },
     { name: 'Resources', path: '/resources', icon: 'BookOpen' },
-    { name: 'Contact', path: '/contact', icon: 'MessageCircle' }
   ];
 
   const secondaryItems = [
-    { name: 'About', path: '/about', icon: 'Info' }
+    { name: 'About', path: '/about', icon: 'Info' },
+    { name: 'Contact', path: '/contact', icon: 'MessageCircle' }
   ];
 
   useEffect(() => {
