@@ -83,7 +83,7 @@ const Header = () => {
             {/* More Menu */}
             <div className="relative group">
               <button className="flex items-center space-x-1 px-3 py-2 text-sm font-genetic-medium text-text-secondary hover:text-text-primary transition-colors duration-genetic-normal">
-                <span>More</span>
+                <span>Conmpany</span>
                 <Icon name="ChevronDown" size={16} />
               </button>
               
