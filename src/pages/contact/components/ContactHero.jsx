@@ -57,7 +57,7 @@ const ContactHero = () => {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-8 border-t border-border">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2"><&lt; 4 hrs</div>
+              <div className="text-3xl font-bold text-primary mb-2">&lt; 4 hrs</div>
               <div className="text-sm text-text-secondary">Response Time</div>
             </div>
             <div className="text-center">
