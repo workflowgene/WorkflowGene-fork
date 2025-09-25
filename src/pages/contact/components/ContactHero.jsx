@@ -76,6 +76,7 @@ const ContactHero = () => {
         </div>
       </div>
     </section>
+  )
   );
 };
 
