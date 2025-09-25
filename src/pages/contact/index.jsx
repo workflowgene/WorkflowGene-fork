@@ -56,7 +56,6 @@ const Contact = () => {
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <img src="/assets/logos/WorkflowGene Logo.png"></img>
-                  </div>
                 </div>
                 <p className="text-sm text-gray-300">
                   The DNA of smart business automation, empowering organizations to evolve and focus on growth.
