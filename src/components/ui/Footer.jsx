@@ -81,7 +81,7 @@ const Footer = () => {
                     href={social?.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 bg-gray-800 rounded-genetic-md flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-genetic-normal"
+                    className="w-10 h-10 bg-gray-800 rounded-genetic-md flex items-center justify-center text-gray-300 hover:bg-primary hover:text-white transition-all duration-genetic-normal"
                     aria-label={`Follow us on ${social?.name}`}
                   >
                     <Icon name={social?.icon} size={18} />
