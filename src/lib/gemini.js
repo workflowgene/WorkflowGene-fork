@@ -5,9 +5,14 @@ const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 let genAI = null;
 let model = null;
 
+// Initialize Gemini AI only if API key is available
 if (API_KEY) {
-  genAI = new GoogleGenerativeAI(API_KEY);
-  model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+  try {
+    genAI = new GoogleGenerativeAI(API_KEY);
+    model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+  } catch (error) {
+    console.error('Failed to initialize Gemini AI:', error);
+  }
 }
 
 // Website content for context
@@ -47,10 +52,19 @@ Contact Information:
 `;
 
 export const generateResponse = async (userMessage) => {
+  // Check if model is available
   if (!model) {
     return {
       success: false,
-      error: 'AI service not configured. Please check your Gemini API key.'
+      error: 'AI service not configured. Please check your Gemini API key configuration.'
+    };
+  }
+
+  // Validate input
+  if (!userMessage || typeof userMessage !== 'string' || userMessage.trim().length === 0) {
+    return {
+      success: false,
+      error: 'Please provide a valid message.'
     };
   }
 
@@ -69,18 +83,50 @@ Keep responses concise but informative, and always be helpful and professional.
 `;
 
     const result = await model.generateContent(prompt);
+    
+    if (!result || !result.response) {
+      throw new Error('Invalid response from AI service');
+    }
+    
     const response = await result.response;
     const text = response.text();
 
+    if (!text || text.trim().length === 0) {
+      throw new Error('Empty response from AI service');
+    }
+
     return {
       success: true,
-      message: text
+      message: text.trim()
     };
   } catch (error) {
     console.error('Gemini API error:', error);
+    
+    // Handle specific error cases
+    if (error.message?.includes('API_KEY_INVALID')) {
+      return {
+        success: false,
+        error: 'Invalid API key. Please check your Gemini API configuration.'
+      };
+    }
+    
+    if (error.message?.includes('QUOTA_EXCEEDED')) {
+      return {
+        success: false,
+        error: 'API quota exceeded. Please try again later.'
+      };
+    }
+    
+    if (error.message?.includes('SAFETY')) {
+      return {
+        success: false,
+        error: 'I cannot process this request due to safety guidelines. Please rephrase your question.'
+      };
+    }
+
     return {
       success: false,
-      error: 'Sorry, I encountered an error. Please try again or contact our support team.'
+      error: 'I\'m experiencing technical difficulties. Please try again or contact our support team at support@workflowgene.cloud'
     };
   }
 };
