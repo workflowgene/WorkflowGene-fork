@@ -59,7 +59,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-secondary text-secondary-foreground">
+    <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="py-12">
@@ -71,7 +71,7 @@ const Footer = () => {
                   <img src="/assets/logos/WorkflowGene Logo.png" alt="WorkflowGene Cloud" />
                 </div>
               </Link>
-              <p className="text-secondary-foreground/80 max-w-md leading-relaxed">
+              <p className="text-gray-300 max-w-md leading-relaxed">
                 The DNA of smart business automation. Transform your operations with intelligent workflows that evolve with your business.
               </p>
               <div className="flex space-x-4">
@@ -81,7 +81,7 @@ const Footer = () => {
                     href={social?.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 bg-secondary-foreground/10 rounded-genetic-md flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-genetic-normal"
+                    className="w-10 h-10 bg-gray-800 rounded-genetic-md flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-genetic-normal"
                     aria-label={`Follow us on ${social?.name}`}
                   >
                     <Icon name={social?.icon} size={18} />
@@ -93,7 +93,7 @@ const Footer = () => {
             {/* Footer Sections */}
             {footerSections?.map((section) => (
               <div key={section?.title}>
-                <h4 className="font-semibold text-secondary-foreground mb-4">
+                <h4 className="font-semibold text-white mb-4">
                   {section?.title}
                 </h4>
                 <ul className="space-y-2">
@@ -101,7 +101,7 @@ const Footer = () => {
                     <li key={link?.name}>
                       <Link
                         to={link?.href}
-                        className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors duration-genetic-normal text-sm"
+                        className="text-gray-300 hover:text-white transition-colors duration-genetic-normal text-sm"
                       >
                         {link?.name}
                       </Link>
@@ -114,9 +114,9 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-secondary-foreground/20 py-6">
+        <div className="border-t border-gray-700 py-6">
           <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
-            <div className="text-sm text-secondary-foreground/60">
+            <div className="text-sm text-gray-400">
               © {currentYear} WorkflowGene Cloud. All rights reserved.
             </div>
             
@@ -125,7 +125,7 @@ const Footer = () => {
                 <Link
                   key={link?.name}
                   to={link?.href}
-                  className="text-sm text-secondary-foreground/60 hover:text-secondary-foreground transition-colors duration-genetic-normal"
+                  className="text-sm text-gray-400 hover:text-white transition-colors duration-genetic-normal"
                 >
                   {link?.name}
                 </Link>
