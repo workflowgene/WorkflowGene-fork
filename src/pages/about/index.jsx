@@ -31,6 +31,7 @@ const About = () => {
         <meta property="og:url" content="https://workflowgene.cloud/about" />
         <link rel="canonical" href="https://workflowgene.cloud/about" />
       </Helmet>
+      
       <div className="min-h-screen bg-background">
         <Header />
         
@@ -52,15 +53,13 @@ const About = () => {
           
           {/* Culture & Benefits */}
           <CultureSection />
-          
         </main>
 
+        <Footer />
+        <AIChatbot />
+      </div>
+    </>
+  );
+};
 
-
-
-
-          </div>
-      <Footer />
-      <AIChatbot />
-  )
-}
+export default About;
