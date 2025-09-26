@@ -62,3 +62,5 @@ const About = () => {
           </div>
       <Footer />
       <AIChatbot />
+  )
+}
