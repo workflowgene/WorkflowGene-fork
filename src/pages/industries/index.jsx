@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '../../components/ui/Header';
+import Footer from '../../components/ui/Footer';
+import AIChatbot from '../../components/ui/AIChatbot';
 import IndustryHero from './components/IndustryHero';
 import IndustryCard from './components/IndustryCard';
 import ROICalculator from './components/ROICalculator';
@@ -9,6 +11,7 @@ import ComplianceSection from './components/ComplianceSection';
 import ResourcesSection from './components/ResourcesSection';
 import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
+import { openCalendlyDemo, startFreeTrial } from '../../utils/navigation';
 
 const Industries = () => {
   useEffect(() => {
@@ -276,6 +279,7 @@ const Industries = () => {
                   className="btn-organic"
                   iconName="Calendar"
                   iconPosition="left"
+                  onClick={openCalendlyDemo}
                 >
                   Schedule Industry Demo
                 </Button>
@@ -307,56 +311,8 @@ const Industries = () => {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="bg-secondary text-secondary-foreground py-12">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-genetic-md flex items-center justify-center">
-                    <Icon name="Zap" size={16} className="text-white" />
-                  </div>
-                  <span className="text-lg font-bold">WorkflowGene Cloud</span>
-                </div>
-                <p className="text-sm text-secondary-foreground/80">
-                  The DNA of smart business automation for modern enterprises.
-                </p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-4">Industries</h4>
-                <ul className="space-y-2 text-sm">
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">Education</a></li>
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">Healthcare</a></li>
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">E-Commerce</a></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-4">Resources</h4>
-                <ul className="space-y-2 text-sm">
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">Templates</a></li>
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">Case Studies</a></li>
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">Webinars</a></li>
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">Reports</a></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-4">Support</h4>
-                <ul className="space-y-2 text-sm">
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">Documentation</a></li>
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">Help Center</a></li>
-                  <li><a href="#" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-colors">Contact Us</a></li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="border-t border-secondary-foreground/20 mt-8 pt-8 text-center text-sm text-secondary-foreground/60">
-              <p>&copy; {new Date()?.getFullYear()} WorkflowGene Cloud. All rights reserved.</p>
-            </div>
-          </div>
-        </footer>
+        <Footer />
+        <AIChatbot />
       </div>
     </>
   );

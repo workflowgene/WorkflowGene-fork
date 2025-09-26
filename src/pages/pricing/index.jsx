@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '../../components/ui/Header';
+import Footer from '../../components/ui/Footer';
+import AIChatbot from '../../components/ui/AIChatbot';
 import PricingHero from './components/PricingHero';
 import PricingToggle from './components/PricingToggle';
 import PricingCard from './components/PricingCard';
@@ -11,6 +13,7 @@ import TrustSignals from './components/TrustSignals';
 import EnterpriseContact from './components/EnterpriseContact';
 import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
+import { openCalendlyDemo, startFreeTrial } from '../../utils/navigation';
 
 const Pricing = () => {
   const [billingCycle, setBillingCycle] = useState('monthly');
@@ -184,6 +187,7 @@ const Pricing = () => {
                 iconName="ArrowRight"
                 iconPosition="right"
                 className="btn-organic"
+                onClick={startFreeTrial}
               >
                 Start Free Trial
               </Button>
@@ -192,6 +196,7 @@ const Pricing = () => {
                 size="lg"
                 iconName="Calendar"
                 iconPosition="left"
+                onClick={openCalendlyDemo}
               >
                 Schedule Demo
               </Button>
@@ -214,65 +219,8 @@ const Pricing = () => {
           </div>
         </section>
       </main>
-      {/* Footer */}
-      <footer className="bg-secondary text-secondary-foreground py-12">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h3 className="font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li><a href="/features" className="hover:opacity-100 transition-opacity">Features</a></li>
-                <li><a href="/pricing" className="hover:opacity-100 transition-opacity">Pricing</a></li>
-                <li><a href="/integrations" className="hover:opacity-100 transition-opacity">Integrations</a></li>
-                <li><a href="/security" className="hover:opacity-100 transition-opacity">Security</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Solutions</h3>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li><a href="/industries" className="hover:opacity-100 transition-opacity">Industries</a></li>
-                <li><a href="/use-cases" className="hover:opacity-100 transition-opacity">Use Cases</a></li>
-                <li><a href="/templates" className="hover:opacity-100 transition-opacity">Templates</a></li>
-                <li><a href="/enterprise" className="hover:opacity-100 transition-opacity">Enterprise</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li><a href="/resources" className="hover:opacity-100 transition-opacity">Blog</a></li>
-                <li><a href="/documentation" className="hover:opacity-100 transition-opacity">Documentation</a></li>
-                <li><a href="/support" className="hover:opacity-100 transition-opacity">Support</a></li>
-                <li><a href="/community" className="hover:opacity-100 transition-opacity">Community</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li><a href="/about" className="hover:opacity-100 transition-opacity">About</a></li>
-                <li><a href="/careers" className="hover:opacity-100 transition-opacity">Careers</a></li>
-                <li><a href="/contact" className="hover:opacity-100 transition-opacity">Contact</a></li>
-                <li><a href="/privacy" className="hover:opacity-100 transition-opacity">Privacy</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-secondary-foreground/20 pt-8 flex flex-col lg:flex-row justify-between items-center">
-            <div className="flex items-center space-x-3 mb-4 lg:mb-0">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-md flex items-center justify-center">
-                <Icon name="Zap" size={16} className="text-white" />
-              </div>
-              <span className="font-semibold">WorkflowGene Cloud</span>
-            </div>
-            
-            <div className="text-sm opacity-80">
-              © {new Date()?.getFullYear()} WorkflowGene Cloud. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
+      <AIChatbot />
     </div>
   );
 };

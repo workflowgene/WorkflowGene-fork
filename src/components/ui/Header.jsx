@@ -45,7 +45,7 @@ const Header = () => {
   const Logo = () => (
     <Link to="/homepage" className="flex items-center space-x-3 group" onClick={closeMenu}>
       <div className="relative">
-        <div className="w-50 h-10 rounded-genetic-md flex items-center justify-center">
+        <div className="w-50 h-10 rounded-genetic-md flex items-center justify-center bg-white/10 backdrop-blur-sm">
           <img src="/assets/logos/WorkflowGene Logo.png" />
         </div>
       </div>
@@ -57,7 +57,7 @@ const Header = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-genetic-normal ${
         isScrolled 
           ? 'bg-background/95 backdrop-blur-genetic shadow-organic-md border-b border-border' 
-          : 'bg-background/80 backdrop-blur-sm'
+          : 'bg-background/90 backdrop-blur-md'
       }`}
     >
       <div className="w-full">

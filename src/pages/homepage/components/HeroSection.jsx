@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
+import { openCalendlyDemo, startFreeTrial } from '../../../utils/navigation';
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -115,6 +116,7 @@ const HeroSection = () => {
                   className="btn-organic"
                   iconName="Play"
                   iconPosition="left"
+                  onClick={startFreeTrial}
                 >
                   Start Free Trial
                 </Button>
@@ -123,6 +125,7 @@ const HeroSection = () => {
                   size="lg"
                   iconName="Calendar"
                   iconPosition="left"
+                  onClick={openCalendlyDemo}
                 >
                   Book Demo
                 </Button>

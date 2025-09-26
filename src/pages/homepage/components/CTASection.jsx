@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
+import { openCalendlyDemo, startFreeTrial } from '../../../utils/navigation';
 
 const CTASection = () => {
   const benefits = [
@@ -54,6 +55,7 @@ const CTASection = () => {
               iconName="Play"
               iconPosition="left"
               className="bg-white text-primary hover:bg-white/90 btn-organic text-lg px-8 py-4"
+              onClick={startFreeTrial}
             >
               Start Free Trial
             </Button>
@@ -63,6 +65,7 @@ const CTASection = () => {
               iconName="Calendar"
               iconPosition="left"
               className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4"
+              onClick={openCalendlyDemo}
             >
               Schedule Demo
             </Button>
@@ -139,6 +142,7 @@ const CTASection = () => {
                 iconName="Rocket"
                 iconPosition="left"
                 className="bg-white text-primary hover:bg-white/90 btn-organic"
+                onClick={startFreeTrial}
               >
                 Get Started Now
               </Button>

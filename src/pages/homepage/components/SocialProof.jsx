@@ -269,38 +269,6 @@ const SocialProof = () => {
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="text-center mt-16 scroll-reveal stagger-4">
-          <div className="bg-gradient-to-br from-primary to-accent rounded-genetic-xl p-8 lg:p-12 text-white">
-            <h3 className="text-3xl lg:text-4xl font-bold mb-4">
-              Join 50,000+ Successful Businesses
-            </h3>
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              Start your transformation journey today and see why industry leaders choose WorkflowGene Cloud.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                variant="secondary"
-                size="lg"
-                iconName="Play"
-                iconPosition="left"
-                className="bg-white text-primary hover:bg-white/90"
-              >
-                Start Free Trial
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                iconName="Calendar"
-                iconPosition="left"
-                className="border-white/30 text-white hover:bg-white/10"
-              >
-                Schedule Demo
-              </Button>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

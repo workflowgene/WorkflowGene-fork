@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
+import { startFreeTrial } from '../../../utils/navigation';
 
 const WorkflowBuilder = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -312,6 +313,7 @@ const WorkflowBuilder = () => {
                 fullWidth
                 iconName="ArrowRight"
                 iconPosition="right"
+                onClick={startFreeTrial}
               >
                 Try Builder Free
               </Button>

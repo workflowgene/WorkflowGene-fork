@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
+import { openCalendlyDemo, startFreeTrial } from '../../../utils/navigation';
 
 const ContactHero = () => {
   return (
@@ -41,6 +42,7 @@ const ContactHero = () => {
               className="btn-organic"
               iconName="Calendar"
               iconPosition="left"
+              onClick={openCalendlyDemo}
             >
               Schedule Demo
             </Button>

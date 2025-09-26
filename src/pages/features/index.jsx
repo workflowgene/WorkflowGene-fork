@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '../../components/ui/Header';
+import Footer from '../../components/ui/Footer';
+import AIChatbot from '../../components/ui/AIChatbot';
 import HeroSection from './components/HeroSection';
 import FeatureCategories from './components/FeatureCategories';
 import InteractiveDemo from './components/InteractiveDemo';
@@ -44,6 +46,8 @@ const FeaturesPage = () => {
           <FeatureComparison />
           <CTASection />
         </main>
+        <Footer />
+        <AIChatbot />
       </div>
     </>
   );

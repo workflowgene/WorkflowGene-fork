@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
+import { openCalendlyDemo, startFreeTrial } from '../../../utils/navigation';
 
 const FeaturesPreview = () => {
   const [activeFeature, setActiveFeature] = useState(0);
@@ -275,6 +276,7 @@ const FeaturesPreview = () => {
                 size="lg"
                 iconName="Play"
                 iconPosition="left"
+                onClick={openCalendlyDemo}
               >
                 Interactive Demo
               </Button>
