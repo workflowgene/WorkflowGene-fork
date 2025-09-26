@@ -19,7 +19,9 @@ const AIChatbot = () => {
   const inputRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {
@@ -28,43 +30,58 @@ const AIChatbot = () => {
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
-      inputRef.current.focus();
+      // Small delay to ensure the component is fully rendered
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 100);
     }
   }, [isOpen]);
 
   const handleSendMessage = async (e) => {
-    e?.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
+    
     if (!inputMessage?.trim() || isTyping) return;
 
     const userMessage = {
       id: Date.now(),
       type: 'user',
-      content: inputMessage?.trim(),
+      content: inputMessage.trim(),
       timestamp: new Date()
     };
 
+    // Add user message immediately
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
     setIsTyping(true);
 
     try {
-      const response = await generateResponse(userMessage?.content);
+      // Generate response
+      const response = await generateResponse(userMessage.content);
       
+      // Create bot message
       const botMessage = {
         id: Date.now() + 1,
         type: 'bot',
-        content: response?.success ? response?.message : response?.error,
+        content: response?.success ? response?.message : (response?.error || 'Sorry, I encountered an error.'),
         timestamp: new Date()
       };
 
+      // Add bot message
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
+      console.error('Chat error:', error);
+      
       const errorMessage = {
         id: Date.now() + 1,
         type: 'bot',
         content: 'Sorry, I encountered an error. Please try again or contact our support team at support@workflowgene.cloud',
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
@@ -82,12 +99,28 @@ const AIChatbot = () => {
   const handleQuickQuestion = (question) => {
     setInputMessage(question);
     if (inputRef.current) {
-      inputRef.current.focus();
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 100);
     }
   };
 
   const formatTime = (timestamp) => {
-    return timestamp?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    try {
+      if (!timestamp) return '';
+      return timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch (error) {
+      return '';
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   return (
@@ -96,22 +129,22 @@ const AIChatbot = () => {
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-14 h-14 bg-primary text-white rounded-full shadow-organic-lg hover:shadow-organic-xl transition-all duration-genetic-normal flex items-center justify-center group"
+          className="w-14 h-14 bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group"
           aria-label="Open AI Assistant"
         >
           {isOpen ? (
             <Icon name="X" size={24} />
           ) : (
-            <Icon name="MessageCircle" size={24} className="group-hover:scale-110 transition-transform duration-genetic-normal" />
+            <Icon name="MessageCircle" size={24} className="group-hover:scale-110 transition-transform duration-300" />
           )}
         </button>
       </div>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] h-[500px] bg-card border border-border rounded-genetic-lg shadow-organic-xl z-50 flex flex-col">
+        <div className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] h-[500px] bg-white border border-gray-200 rounded-lg shadow-xl z-50 flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-border bg-primary text-white rounded-t-genetic-lg">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-primary text-white rounded-t-lg">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                 <Icon name="Bot" size={16} />
@@ -123,7 +156,7 @@ const AIChatbot = () => {
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="w-8 h-8 hover:bg-white/20 rounded-genetic-md flex items-center justify-center transition-colors duration-genetic-normal"
+              className="w-8 h-8 hover:bg-white/20 rounded-md flex items-center justify-center transition-colors duration-300"
             >
               <Icon name="X" size={16} />
             </button>
@@ -137,17 +170,17 @@ const AIChatbot = () => {
                 className={`flex ${message?.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] p-3 rounded-genetic-lg ${
+                  className={`max-w-[80%] p-3 rounded-lg ${
                     message?.type === 'user'
                       ? 'bg-primary text-white'
-                      : 'bg-surface text-text-primary border border-border'
+                      : 'bg-gray-50 text-gray-900 border border-gray-200'
                   }`}
                 >
                   <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                    {message?.content}
+                    {message?.content || ''}
                   </p>
                   <p className={`text-xs mt-2 ${
-                    message?.type === 'user' ? 'text-white/70' : 'text-text-secondary'
+                    message?.type === 'user' ? 'text-white/70' : 'text-gray-500'
                   }`}>
                     {formatTime(message?.timestamp)}
                   </p>
@@ -157,11 +190,11 @@ const AIChatbot = () => {
 
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-surface border border-border p-3 rounded-genetic-lg">
+                <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-text-secondary rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-text-secondary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-text-secondary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>
@@ -171,14 +204,14 @@ const AIChatbot = () => {
 
           {/* Quick Questions */}
           {messages?.length === 1 && (
-            <div className="p-4 border-t border-border">
-              <p className="text-xs text-text-secondary mb-3">Quick questions:</p>
+            <div className="p-4 border-t border-gray-200">
+              <p className="text-xs text-gray-500 mb-3">Quick questions:</p>
               <div className="flex flex-wrap gap-2">
                 {quickQuestions?.slice(0, 3)?.map((question, index) => (
                   <button
                     key={index}
                     onClick={() => handleQuickQuestion(question)}
-                    className="text-xs bg-surface hover:bg-muted text-text-secondary hover:text-text-primary px-3 py-1 rounded-full transition-colors duration-genetic-normal"
+                    className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 px-3 py-1 rounded-full transition-colors duration-300"
                   >
                     {question}
                   </button>
@@ -188,15 +221,16 @@ const AIChatbot = () => {
           )}
 
           {/* Input */}
-          <div className="p-4 border-t border-border">
+          <div className="p-4 border-t border-gray-200">
             <form onSubmit={handleSendMessage} className="flex space-x-2">
               <input
                 ref={inputRef}
                 type="text"
                 value={inputMessage}
-                onChange={(e) => setInputMessage(e?.target?.value)}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
                 placeholder="Ask me anything about WorkflowGene..."
-                className="flex-1 px-3 py-2 border border-border rounded-genetic-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
                 disabled={isTyping}
               />
               <Button
