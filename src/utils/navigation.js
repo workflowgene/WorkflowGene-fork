@@ -5,8 +5,8 @@ export const openCalendlyDemo = () => {
 };
 
 export const startFreeTrial = () => {
-  // For now, redirect to contact page - can be updated when auth is implemented
-  window.location.href = '/contact';
+  // Redirect to signup page for free trial
+  window.location.href = '/signup';
 };
 
 export const openExternalLink = (url) => {
