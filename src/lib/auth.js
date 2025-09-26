@@ -68,3 +68,25 @@ export const updatePassword = async (newPassword) => {
   if (error) throw error;
   return data;
 };
+
+// ✅ Update profile data
+export const updateProfile = async (profileData) => {
+  try {
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) throw new Error("No authenticated user");
+
+    // Assuming you have a "profiles" table with a "user_id" column
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(profileData)
+      .eq('user_id', user.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.error("Update profile error:", err.message);
+    throw err;
+  }
+};
