@@ -6,6 +6,15 @@
 
 @layer base {
   :root {
+    /* Dark mode variables */
+    --color-background-dark: #0F172A; /* slate-900 */
+    --color-foreground-dark: #F1F5F9; /* slate-100 */
+    --color-surface-dark: #1E293B; /* slate-800 */
+    --color-card-dark: #1E293B; /* slate-800 */
+    --color-border-dark: #334155; /* slate-700 */
+    --color-muted-dark: #334155; /* slate-700 */
+    --color-muted-foreground-dark: #94A3B8; /* slate-400 */
+    
     /* Background Colors */
     --color-background: #FFFFFF; /* white */
     --color-foreground: #1F2937; /* gray-800 */
@@ -85,6 +94,18 @@
   body {
     @apply bg-background text-foreground font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  .dark {
+    --color-background: var(--color-background-dark);
+    --color-foreground: var(--color-foreground-dark);
+    --color-surface: var(--color-surface-dark);
+    --color-card: var(--color-card-dark);
+    --color-border: var(--color-border-dark);
+    --color-muted: var(--color-muted-dark);
+    --color-muted-foreground: var(--color-muted-foreground-dark);
+    --color-text-primary: var(--color-foreground-dark);
+    --color-text-secondary: var(--color-muted-foreground-dark);
   }
   
   h1, h2, h3, h4, h5, h6 {

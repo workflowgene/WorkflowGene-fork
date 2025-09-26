@@ -109,18 +109,22 @@ const Header = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              Sign In
-            </Button>
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="btn-organic"
-              iconName="ArrowRight"
-              iconPosition="right"
-            >
-              Start Free Trial
-            </Button>
+            <Link to="/login">
+              <Button variant="ghost" size="sm">
+                Sign In
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button 
+                variant="default" 
+                size="sm" 
+                className="btn-organic"
+                iconName="ArrowRight"
+                iconPosition="right"
+              >
+                Start Free Trial
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -173,25 +177,29 @@ const Header = () => {
             </nav>
             
             <div className="mt-6 pt-4 border-t border-border space-y-3">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                fullWidth
-                onClick={closeMenu}
-              >
-                Sign In
-              </Button>
-              <Button 
-                variant="default" 
-                size="sm" 
-                fullWidth
-                className="btn-organic"
-                iconName="ArrowRight"
-                iconPosition="right"
-                onClick={closeMenu}
-              >
-                Start Free Trial
-              </Button>
+              <Link to="/login">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  fullWidth
+                  onClick={closeMenu}
+                >
+                  Sign In
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button 
+                  variant="default" 
+                  size="sm" 
+                  fullWidth
+                  className="btn-organic"
+                  iconName="ArrowRight"
+                  iconPosition="right"
+                  onClick={closeMenu}
+                >
+                  Start Free Trial
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

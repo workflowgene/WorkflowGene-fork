@@ -2,7 +2,24 @@ import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
+import { AuthProvider } from "components/auth/AuthProvider";
+import ProtectedRoute from "components/auth/ProtectedRoute";
 import NotFound from "pages/NotFound";
+
+// Auth pages
+import Login from './pages/auth/Login';
+import Signup from './pages/auth/Signup';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import VerifyEmail from './pages/auth/VerifyEmail';
+
+// Dashboard pages
+import Dashboard from './pages/dashboard/Dashboard';
+import Workflows from './pages/dashboard/Workflows';
+import Analytics from './pages/dashboard/Analytics';
+import Profile from './pages/dashboard/Profile';
+import Settings from './pages/dashboard/Settings';
+
+// Existing pages
 import Careers from './pages/careers';
 import Help from './pages/help';
 import Security from './pages/security';
@@ -30,37 +47,73 @@ import Contact from './pages/contact';
 const Routes = () => {
   return (
     <BrowserRouter>
-      <ErrorBoundary>
-      <ScrollToTop />
-      <RouterRoutes>
-        {/* Define your route here */}
-        <Route path="/" element={<Homepage />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/resources" element={<ResourcesPage />} />
-        <Route path="/features" element={<FeaturesPage />} />
-        <Route path="/industries" element={<Industries />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/homepage" element={<Homepage />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/careers" element={<Careers />} />
-        <Route path="/help" element={<Help />} />
-        <Route path="/security" element={<Security />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/api" element={<APIDocumentation />} />
-        <Route path="/status" element={<Status />} />
-        <Route path="/integrations" element={<Integrations />} />
-        <Route path="/templates" element={<Templates />} />
-        <Route path="/documentation" element={<Documentation />} />
-        <Route path="/support" element={<Support />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/press" element={<Press />} />
-        <Route path="/investors" element={<Investors />} />
-        <Route path="/cookies" element={<Cookies />} />
-        <Route path="/compliance" element={<Compliance />} />
-        <Route path="*" element={<NotFound />} />
-      </RouterRoutes>
-      </ErrorBoundary>
+      <AuthProvider>
+        <ErrorBoundary>
+          <ScrollToTop />
+          <RouterRoutes>
+            {/* Public routes */}
+            <Route path="/" element={<Homepage />} />
+            <Route path="/homepage" element={<Homepage />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/resources" element={<ResourcesPage />} />
+            <Route path="/features" element={<FeaturesPage />} />
+            <Route path="/industries" element={<Industries />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/api" element={<APIDocumentation />} />
+            <Route path="/status" element={<Status />} />
+            <Route path="/integrations" element={<Integrations />} />
+            <Route path="/templates" element={<Templates />} />
+            <Route path="/documentation" element={<Documentation />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/press" element={<Press />} />
+            <Route path="/investors" element={<Investors />} />
+            <Route path="/cookies" element={<Cookies />} />
+            <Route path="/compliance" element={<Compliance />} />
+
+            {/* Auth routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+
+            {/* Protected dashboard routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/workflows" element={
+              <ProtectedRoute>
+                <Workflows />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/analytics" element={
+              <ProtectedRoute requiredRoles={['super_admin', 'org_admin', 'manager']}>
+                <Analytics />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/settings" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
+
+            <Route path="*" element={<NotFound />} />
+          </RouterRoutes>
+        </ErrorBoundary>
+      </AuthProvider>
     </BrowserRouter>
   );
 };
