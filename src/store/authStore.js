@@ -1,6 +1,7 @@
+// store/authStore.js
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { getCurrentUser, getCurrentProfile } from '../lib/auth';
+import { getCurrentProfile } from '../lib/auth';
 
 const useAuthStore = create((set, get) => ({
   // State
@@ -17,22 +18,28 @@ const useAuthStore = create((set, get) => ({
   // Initialize auth state
   initialize: async () => {
     try {
-      const user = await getCurrentUser();
-      const profile = user ? await getCurrentProfile() : null;
-      
-      set({ 
-        user, 
-        profile, 
-        loading: false, 
-        initialized: true 
+      // ✅ Get auth user from Supabase
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error) throw error;
+
+      let profile = null;
+      if (user) {
+        profile = await getCurrentProfile();
+      }
+
+      set({
+        user,
+        profile,
+        loading: false,
+        initialized: true
       });
     } catch (error) {
       console.error('Auth initialization error:', error);
-      set({ 
-        user: null, 
-        profile: null, 
-        loading: false, 
-        initialized: true 
+      set({
+        user: null,
+        profile: null,
+        loading: false,
+        initialized: true
       });
     }
   },
@@ -50,17 +57,17 @@ const useAuthStore = create((set, get) => ({
   },
 
   // Clear auth state
-  clearAuth: () => set({ 
-    user: null, 
-    profile: null, 
-    loading: false 
+  clearAuth: () => set({
+    user: null,
+    profile: null,
+    loading: false
   }),
 
   // Check if user has required role
   hasRole: (requiredRoles) => {
     const { profile } = get();
     if (!profile?.role) return false;
-    return Array.isArray(requiredRoles) 
+    return Array.isArray(requiredRoles)
       ? requiredRoles.includes(profile.role)
       : profile.role === requiredRoles;
   },
@@ -121,10 +128,10 @@ const useAuthStore = create((set, get) => ({
   }
 }));
 
-// Set up auth state listener
+// Supabase auth state listener
 supabase.auth.onAuthStateChange(async (event, session) => {
   const { setUser, setProfile, clearAuth, refreshProfile } = useAuthStore.getState();
-  
+
   if (event === 'SIGNED_IN' && session?.user) {
     setUser(session.user);
     await refreshProfile();

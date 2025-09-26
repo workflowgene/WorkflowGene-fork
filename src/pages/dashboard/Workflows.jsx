@@ -5,6 +5,8 @@ import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import Icon from '../../components/AppIcon';
+import WorkflowBuilder from '../../components/workflow/WorkflowBuilder';
+import TeamCollaboration from '../../components/collaboration/TeamCollaboration';
 import { useAuth } from '../../components/auth/AuthProvider';
 import { supabase } from '../../lib/supabase';
 
@@ -13,6 +15,9 @@ const Workflows = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [showBuilder, setShowBuilder] = useState(false);
+  const [editingWorkflow, setEditingWorkflow] = useState(null);
+  const [showCollaboration, setShowCollaboration] = useState(false);
   const { profile, getPermissions } = useAuth();
   const permissions = getPermissions();
 
@@ -94,6 +99,21 @@ const Workflows = () => {
     }
   };
 
+  const handleCreateWorkflow = () => {
+    setEditingWorkflow(null);
+    setShowBuilder(true);
+  };
+
+  const handleEditWorkflow = (workflow) => {
+    setEditingWorkflow(workflow);
+    setShowBuilder(true);
+  };
+
+  const handleSaveWorkflow = () => {
+    setShowBuilder(false);
+    setEditingWorkflow(null);
+    fetchWorkflows();
+  };
   return (
     <>
       <Helmet>
@@ -112,18 +132,34 @@ const Workflows = () => {
               </p>
             </div>
             
-            {permissions.canManageWorkflows && (
+            <div className="flex items-center space-x-3">
               <Button
-                variant="default"
-                iconName="Plus"
+                variant="outline"
+                onClick={() => setShowCollaboration(!showCollaboration)}
+                iconName="Users"
                 iconPosition="left"
-                className="btn-organic"
               >
-                Create Workflow
+                Team Activity
               </Button>
-            )}
+              
+              {permissions.canManageWorkflows && (
+                <Button
+                  variant="default"
+                  onClick={handleCreateWorkflow}
+                  iconName="Plus"
+                  iconPosition="left"
+                  className="btn-organic"
+                >
+                  Create Workflow
+                </Button>
+              )}
+            </div>
           </div>
 
+          {/* Team Collaboration */}
+          {showCollaboration && (
+            <TeamCollaboration />
+          )}
           {/* Filters */}
           <div className="bg-card rounded-genetic-lg p-6 shadow-organic-sm">
             <div className="flex flex-col lg:flex-row gap-4">
@@ -166,7 +202,7 @@ const Workflows = () => {
                   }
                 </p>
                 {workflows.length === 0 && permissions.canManageWorkflows && (
-                  <Button variant="default" iconName="Plus" iconPosition="left">
+                  <Button variant="default" onClick={handleCreateWorkflow} iconName="Plus" iconPosition="left">
                     Create First Workflow
                   </Button>
                 )}
@@ -211,7 +247,12 @@ const Workflows = () => {
                       <div className="flex items-center space-x-2 ml-4">
                         {permissions.canManageWorkflows && (
                           <>
-                            <Button variant="ghost" size="sm" iconName="Edit">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              iconName="Edit"
+                              onClick={() => handleEditWorkflow(workflow)}
+                            >
                               Edit
                             </Button>
                             
@@ -255,6 +296,15 @@ const Workflows = () => {
             )}
           </div>
         </div>
+
+        {/* Workflow Builder Modal */}
+        {showBuilder && (
+          <WorkflowBuilder
+            workflowId={editingWorkflow?.id}
+            onSave={handleSaveWorkflow}
+            onClose={() => setShowBuilder(false)}
+          />
+        )}
       </DashboardLayout>
     </>
   );

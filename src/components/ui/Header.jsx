@@ -13,12 +13,16 @@ const Header = () => {
     { name: 'Features', path: '/features', icon: 'Zap' },
     { name: 'Industries', path: '/industries', icon: 'Building2' },
     { name: 'Pricing', path: '/pricing', icon: 'DollarSign' },
-    { name: 'Contact', path: '/contact', icon: 'MessageCircle' }
+    { name: 'Contact', path: '/contact', icon: 'MessageCircle' },
+    { name: 'Blog', path: '/blog', icon: 'BookOpen' }
   ];
 
   const secondaryItems = [
     { name: 'About', path: '/about', icon: 'Info' },
-    { name: 'Resources', path: '/resources', icon: 'BookOpen' }
+    { name: 'Resources', path: '/resources', icon: 'BookOpen' },
+    { name: 'Case Studies', path: '/case-studies', icon: 'Award' },
+    { name: 'FAQ', path: '/faq', icon: 'HelpCircle' },
+    { name: 'Help Center', path: '/help-center', icon: 'LifeBuoy' }
   ];
 
   useEffect(() => {

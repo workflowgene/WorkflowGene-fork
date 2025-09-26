@@ -3,10 +3,12 @@ import { Helmet } from 'react-helmet';
 import { useAuth } from '../../components/auth/AuthProvider';
 import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import DashboardOverview from './components/DashboardOverview';
+import IndustryDashboard from './components/IndustryDashboard';
+import SystemHealthDashboard from '../../components/admin/SystemHealthDashboard';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const Dashboard = () => {
-  const { profile, isLoading } = useAuth();
+  const { user, profile, isLoading } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -16,15 +18,61 @@ const Dashboard = () => {
     return <LoadingSpinner message="Loading dashboard..." />;
   }
 
+  // Handle case: user exists but profile is missing
+  if (user && !profile) {
+    return (
+      <DashboardLayout>
+        <div className="p-6 text-center">
+          <h2 className="text-xl font-semibold mb-2">Welcome!</h2>
+          <p className="text-gray-600">
+            Your account is active, but we don’t have a profile on record yet.  
+            Please contact support or try logging out and back in.
+          </p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Handle case: no user at all
+  if (!user) {
+    return (
+      <DashboardLayout>
+        <div className="p-6 text-center">
+          <h2 className="text-xl font-semibold mb-2">Not signed in</h2>
+          <p className="text-gray-600">
+            Please sign in to access your dashboard.
+          </p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Render dashboards based on profile role + organization industry
+  const renderDashboardContent = () => {
+    if (profile?.role === 'super_admin') {
+      return <SystemHealthDashboard />;
+    }
+
+    const industry = profile?.organization?.industry;
+    if (industry && ['education', 'healthcare', 'ecommerce'].includes(industry)) {
+      return <IndustryDashboard industry={industry} />;
+    }
+
+    return <DashboardOverview />;
+  };
+
   return (
     <>
       <Helmet>
         <title>Dashboard - WorkflowGene Cloud</title>
-        <meta name="description" content="Manage your workflows, analytics, and organization settings." />
+        <meta
+          name="description"
+          content="Manage your workflows, analytics, and organization settings."
+        />
       </Helmet>
-      
+
       <DashboardLayout>
-        <DashboardOverview />
+        {renderDashboardContent()}
       </DashboardLayout>
     </>
   );

@@ -4,6 +4,7 @@ import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Icon from '../../components/AppIcon';
+import TwoFactorAuth from '../../components/auth/TwoFactorAuth';
 import { useAuth } from '../../components/auth/AuthProvider';
 import { updateProfile, updatePassword } from '../../lib/auth';
 import toast from 'react-hot-toast';
@@ -248,20 +249,7 @@ const Profile = () => {
 
                       {/* Two-Factor Authentication */}
                       <div className="border-t border-border pt-8">
-                        <h3 className="text-lg font-medium text-text-primary mb-4">
-                          Two-Factor Authentication
-                        </h3>
-                        <div className="flex items-center justify-between p-4 bg-surface rounded-genetic-md">
-                          <div>
-                            <h4 className="font-medium text-text-primary">Authenticator App</h4>
-                            <p className="text-sm text-text-secondary">
-                              Add an extra layer of security to your account
-                            </p>
-                          </div>
-                          <Button variant="outline" size="sm">
-                            Enable 2FA
-                          </Button>
-                        </div>
+                        <TwoFactorAuth />
                       </div>
                     </div>
                   </div>
@@ -333,7 +321,8 @@ const Profile = () => {
                     </div>
                   </div>
                 )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -44,6 +44,12 @@ import About from './pages/about';
 import Homepage from './pages/homepage';
 import Contact from './pages/contact';
 
+// New pages
+import Blog from './pages/blog';
+import CaseStudies from './pages/case-studies';
+import FAQ from './pages/faq';
+import HelpCenter from './pages/help-center';
+
 const Routes = () => {
   return (
     <BrowserRouter>
@@ -76,6 +82,10 @@ const Routes = () => {
             <Route path="/investors" element={<Investors />} />
             <Route path="/cookies" element={<Cookies />} />
             <Route path="/compliance" element={<Compliance />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/case-studies" element={<CaseStudies />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/help-center" element={<HelpCenter />} />
 
             {/* Auth routes */}
             <Route path="/login" element={<Login />} />
