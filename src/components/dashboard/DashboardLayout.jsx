@@ -47,6 +47,12 @@ const DashboardLayout = ({ children }) => {
       roles: ['super_admin']
     },
     {
+      name: 'CMS Builder',
+      path: '/dashboard/cms',
+      icon: 'Layout',
+      roles: ['super_admin']
+    },
+    {
       name: 'Settings',
       path: '/dashboard/settings',
       icon: 'Settings',
