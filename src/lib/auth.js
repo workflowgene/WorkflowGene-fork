@@ -1,26 +1,51 @@
-// lib/auth.js
+// src/lib/auth.js
 import { supabase } from './supabase';
 
-// Fetch the current profile from Supabase
+// ✅ Get the current user session
+export const getCurrentUser = async () => {
+  const { data: { session }, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  return session?.user || null;
+};
+
+// ✅ Get user profile from database (if you have a "profiles" table)
 export const getCurrentProfile = async () => {
-  try {
-    // Get active auth user from Supabase session
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError) throw userError;
-    if (!user) return null;
+  const user = await getCurrentUser();
+  if (!user) return null;
 
-    // Query the "profiles" table using the user's ID
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)   // ✅ same UUID as Supabase auth.users
-      .single();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
 
-    if (profileError) throw profileError;
+  if (error) throw error;
+  return data;
+};
 
-    return profile;
-  } catch (error) {
-    console.error('Error fetching current profile:', error.message);
-    return null;
-  }
+// ✅ Sign in user
+export const signIn = async ({ email, password }) => {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+  if (error) throw error;
+  return data;
+};
+
+// ✅ Sign up user
+export const signUp = async ({ email, password, ...metadata }) => {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: metadata }
+  });
+  if (error) throw error;
+  return data;
+};
+
+// ✅ Sign out user
+export const signOut = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
 };
