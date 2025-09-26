@@ -49,3 +49,22 @@ export const signOut = async () => {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 };
+
+// ✅ Request a password reset (sends email)
+export const resetPassword = async (email) => {
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`, 
+    // 👆 make sure you have a /reset-password route in your app
+  });
+  if (error) throw error;
+  return data;
+};
+
+// ✅ Update the user password (after email link redirect)
+export const updatePassword = async (newPassword) => {
+  const { data, error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+  if (error) throw error;
+  return data;
+};
