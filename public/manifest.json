@@ -1,15 +1,45 @@
 {
-  "short_name": "workflowgene-cloud",
-  "name": "workflowgene-cloud",
+  "short_name": "WorkflowGene",
+  "name": "WorkflowGene Cloud",
+  "description": "The DNA of Smart Business Automation",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/assets/logos/WorkflowGene Logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/logos/WorkflowGene Logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#2563EB",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["business", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Access your workflow dashboard",
+      "url": "/dashboard",
+      "icons": [{ "src": "/assets/logos/WorkflowGene Logo.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Create Workflow",
+      "short_name": "Create",
+      "description": "Create a new workflow",
+      "url": "/dashboard/workflows/new",
+      "icons": [{ "src": "/assets/logos/WorkflowGene Logo.png", "sizes": "96x96" }]
+    }
+  ]
 }

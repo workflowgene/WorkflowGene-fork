@@ -5,6 +5,8 @@ import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import Icon from '../../components/AppIcon';
+import BillingDashboard from '../../components/billing/BillingDashboard';
+import IntegrationMarketplace from '../../components/marketplace/IntegrationMarketplace';
 import { useAuth } from '../../components/auth/AuthProvider';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
@@ -204,7 +206,12 @@ const Settings = () => {
 
             {/* Content */}
             <div className="lg:col-span-3">
-              <div className="bg-card rounded-genetic-lg p-8 shadow-organic-sm">
+              {activeTab === 'billing' ? (
+                <BillingDashboard />
+              ) : activeTab === 'integrations' ? (
+                <IntegrationMarketplace />
+              ) : (
+                <div className="bg-card rounded-genetic-lg p-8 shadow-organic-sm">
                 {activeTab === 'organization' && (
                   <div>
                     <h2 className="text-2xl font-semibold text-text-primary mb-6">
@@ -453,7 +460,8 @@ const Settings = () => {
                     </div>
                   </div>
                 )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
