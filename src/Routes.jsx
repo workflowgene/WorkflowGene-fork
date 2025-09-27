@@ -18,6 +18,7 @@ import Workflows from './pages/dashboard/Workflows';
 import Analytics from './pages/dashboard/Analytics';
 import Profile from './pages/dashboard/Profile';
 import Settings from './pages/dashboard/Settings';
+import CMS from './pages/dashboard/CMS';
 
 // Existing pages
 import Careers from './pages/careers';
@@ -117,6 +118,11 @@ const Routes = () => {
             <Route path="/dashboard/settings" element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/cms" element={
+              <ProtectedRoute requiredRoles={['super_admin']}>
+                <CMS />
               </ProtectedRoute>
             } />
 

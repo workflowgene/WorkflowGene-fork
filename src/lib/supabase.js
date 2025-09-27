@@ -13,15 +13,23 @@ if (!supabaseUrl || !supabaseAnonKey) {
       select: () => Promise.resolve({ data: [], error: null }),
       insert: () => Promise.resolve({ data: null, error: null }),
       update: () => Promise.resolve({ data: null, error: null }),
-      delete: () => Promise.resolve({ data: null, error: null })
+      delete: () => Promise.resolve({ data: null, error: null }),
+      upsert: () => Promise.resolve({ data: null, error: null })
     }),
     auth: {
       signUp: () => Promise.resolve({ data: null, error: null }),
-      signIn: () => Promise.resolve({ data: null, error: null }),
+      signInWithPassword: () => Promise.resolve({ data: { user: null }, error: null }),
       signOut: () => Promise.resolve({ error: null }),
       getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-      getSession: () => Promise.resolve({ data: { session: null }, error: null })
-    }
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: null } })
+    },
+    channel: () => ({
+      on: () => ({ subscribe: () => {}, unsubscribe: () => {} }),
+      subscribe: () => {},
+      unsubscribe: () => {}
+    }),
+    removeChannel: () => {}
   };
 } else {
   supabase = createClient(supabaseUrl, supabaseAnonKey, {

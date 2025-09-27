@@ -23,10 +23,10 @@ const Login = () => {
 
   useEffect(() => {
     // Redirect if already authenticated
-    if (isAuthenticated) {
+    if (isAuthenticated && profile) {
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, from]);
+  }, [isAuthenticated, profile, navigate, from]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -40,13 +40,16 @@ const Login = () => {
     setIsSubmitting(true);
 
     try {
-      const result = await signIn(formData);
+      await signIn(formData);
       
-      if (result.success) {
+      // Navigation will be handled by the auth state change
+      // Just wait a moment for the auth state to update
+      setTimeout(() => {
         navigate(from, { replace: true });
-      }
+      }, 100);
     } catch (error) {
       console.error('Login error:', error);
+      toast.error(error.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsSubmitting(false);
     }
