@@ -9,11 +9,11 @@ const ProtectedRoute = ({
   requireAuth = true,
   fallbackPath = '/login' 
 }) => {
-  const { isAuthenticated, isLoading, profile, hasRole } = useAuth();
+  const { isAuthenticated, loading, profile, hasRole } = useAuth();
   const location = useLocation();
 
   // Show loading spinner while checking auth state
-  if (isLoading) {
+  if (loading) {
     return <LoadingSpinner />;
   }
 

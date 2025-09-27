@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import CMSBuilder from '../../components/cms/CMSBuilder';
 
 const CMS = () => {
@@ -15,9 +14,7 @@ const CMS = () => {
         <meta name="description" content="Manage and edit website pages with the visual CMS builder." />
       </Helmet>
       
-      <div className="h-screen bg-background">
-        <CMSBuilder />
-      </div>
+      <CMSBuilder />
     </>
   );
 };

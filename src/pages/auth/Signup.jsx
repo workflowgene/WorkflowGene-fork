@@ -7,6 +7,7 @@ import Select from '../../components/ui/Select';
 import Icon from '../../components/AppIcon';
 import { signUp } from '../../lib/auth';
 import { useAuth } from '../../components/auth/AuthProvider';
+import toast from 'react-hot-toast';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -48,10 +49,10 @@ const Signup = () => {
   ];
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && profile) {
       navigate('/dashboard', { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, profile, navigate]);
 
   useEffect(() => {
     // Calculate password strength
@@ -90,19 +91,19 @@ const Signup = () => {
     e.preventDefault();
     
     if (formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match');
+      alert('Passwords do not match');
       return;
     }
 
     if (!formData.agreeToTerms) {
-      toast.error('Please agree to the terms and conditions');
+      alert('Please agree to the terms and conditions');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const result = await signUp({
+      await signUp({
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
@@ -110,17 +111,11 @@ const Signup = () => {
         organizationName: formData.organizationName
       });
       
-      if (result.success) {
-        if (result.needsVerification) {
-          navigate('/verify-email', { 
-            state: { email: formData.email } 
-          });
-        } else {
-          navigate('/dashboard');
-        }
-      }
+      // For demo purposes, navigate directly to dashboard
+      navigate('/dashboard');
     } catch (error) {
       console.error('Signup error:', error);
+      toast.error(error.message || 'Signup failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

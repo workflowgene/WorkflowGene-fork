@@ -35,6 +35,12 @@ const DashboardLayout = ({ children }) => {
       roles: ['super_admin', 'org_admin', 'manager']
     },
     {
+      name: 'CMS Builder',
+      path: '/dashboard/cms',
+      icon: 'Layout',
+      roles: ['super_admin']
+    },
+    {
       name: 'Users',
       path: '/dashboard/users',
       icon: 'Users',
@@ -44,12 +50,6 @@ const DashboardLayout = ({ children }) => {
       name: 'Organizations',
       path: '/dashboard/organizations',
       icon: 'Building2',
-      roles: ['super_admin']
-    },
-    {
-      name: 'CMS Builder',
-      path: '/dashboard/cms',
-      icon: 'Layout',
       roles: ['super_admin']
     },
     {

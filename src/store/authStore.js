@@ -24,7 +24,30 @@ const useAuthStore = create((set, get) => ({
 
       let profile = null;
       if (user) {
-        profile = await getCurrentProfile();
+        try {
+          profile = await getCurrentProfile();
+        } catch (profileError) {
+          console.error('Profile fetch error:', profileError);
+          // If profile doesn't exist, create a basic one
+          if (profileError.code === 'PGRST116') {
+            const { data: newProfile, error: createError } = await supabase
+              .from('profiles')
+              .insert({
+                id: user.id,
+                email: user.email,
+                first_name: user.user_metadata?.firstName || '',
+                last_name: user.user_metadata?.lastName || '',
+                role: user.email === 'superadmin@workflowgene.cloud' ? 'super_admin' : 'user',
+                email_verified: user.email_confirmed_at !== null
+              })
+              .select()
+              .single();
+            
+            if (!createError) {
+              profile = newProfile;
+            }
+          }
+        }
       }
 
       set({

@@ -15,7 +15,10 @@ export const getCurrentProfile = async () => {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('*')
+    .select(`
+      *,
+      organization:organizations(*)
+    `)
     .eq('id', user.id)
     .single();
 
@@ -30,6 +33,15 @@ export const signIn = async ({ email, password }) => {
     password
   });
   if (error) throw error;
+  
+  // Update last login timestamp
+  if (data.user) {
+    await supabase
+      .from('profiles')
+      .update({ last_login: new Date().toISOString() })
+      .eq('id', data.user.id);
+  }
+  
   return data;
 };
 

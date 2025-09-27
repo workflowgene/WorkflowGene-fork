@@ -158,7 +158,7 @@ const Workflows = () => {
 
           {/* Team Collaboration */}
           {showCollaboration && (
-            <TeamCollaboration />
+            <TeamCollaboration workflowId={null} limit={10} />
           )}
           {/* Filters */}
           <div className="bg-card rounded-genetic-lg p-6 shadow-organic-sm">

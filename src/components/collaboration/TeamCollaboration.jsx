@@ -7,7 +7,7 @@ import { useAuth } from '../auth/AuthProvider';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
 
-const TeamCollaboration = () => {
+const TeamCollaboration = ({ workflowId = null, limit = 10 }) => {
   const [activeUsers, setActiveUsers] = useState([]);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');

@@ -8,13 +8,13 @@ import SystemHealthDashboard from '../../components/admin/SystemHealthDashboard'
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const Dashboard = () => {
-  const { user, profile, isLoading } = useAuth();
+  const { user, profile, loading } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  if (isLoading) {
+  if (loading) {
     return <LoadingSpinner message="Loading dashboard..." />;
   }
 
@@ -25,9 +25,9 @@ const Dashboard = () => {
         <div className="p-6 text-center">
           <h2 className="text-xl font-semibold mb-2">Welcome!</h2>
           <p className="text-gray-600">
-            Your account is active, but we don’t have a profile on record yet.  
-            Please contact support or try logging out and back in.
+            Setting up your profile... Please wait a moment.
           </p>
+          <LoadingSpinner />
         </div>
       </DashboardLayout>
     );
@@ -53,7 +53,7 @@ const Dashboard = () => {
       return <SystemHealthDashboard />;
     }
 
-    const industry = profile?.organization?.industry;
+    const industry = profile?.organization?.industry || profile?.industry;
     if (industry && ['education', 'healthcare', 'ecommerce'].includes(industry)) {
       return <IndustryDashboard industry={industry} />;
     }
