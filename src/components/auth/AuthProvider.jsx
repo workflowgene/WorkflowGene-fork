@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
 
 const AuthContext = createContext({});
@@ -32,22 +31,6 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={value}>
       {children}
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-          success: {
-            duration: 3000,
-            theme: {
-              primary: '#4aed88',
-            },
-          },
-        }}
-      />
     </AuthContext.Provider>
   );
 };

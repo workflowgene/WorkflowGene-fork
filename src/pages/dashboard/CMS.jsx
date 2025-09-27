@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
+import DashboardLayout from '../../components/dashboard/DashboardLayout';
 import CMSBuilder from '../../components/cms/CMSBuilder';
 
 const CMS = () => {

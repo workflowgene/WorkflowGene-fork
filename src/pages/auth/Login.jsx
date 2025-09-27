@@ -41,13 +41,17 @@ const Login = () => {
     setIsSubmitting(true);
 
     try {
-      await signIn(formData);
+      const result = await signIn(formData);
       
-      // Navigation will be handled by the auth state change
-      // Just wait a moment for the auth state to update
-      setTimeout(() => {
-        navigate(from, { replace: true });
-      }, 100);
+      if (result.success) {
+        toast.success('Login successful!');
+        // Small delay to allow auth state to update
+        setTimeout(() => {
+          navigate(from, { replace: true });
+        }, 500);
+      } else {
+        throw new Error(result.error || 'Login failed');
+      }
     } catch (error) {
       console.error('Login error:', error);
       toast.error(error.message || 'Login failed. Please check your credentials.');

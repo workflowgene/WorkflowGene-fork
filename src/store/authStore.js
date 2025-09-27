@@ -1,7 +1,7 @@
 // store/authStore.js
 import { create } from 'zustand';
-import { supabase } from '../lib/supabase';
-import { getCurrentProfile } from '../lib/auth';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { getCurrentProfile, ensureSuperAdmin } from '../lib/auth';
 
 const useAuthStore = create((set, get) => ({
   // State
@@ -17,8 +17,22 @@ const useAuthStore = create((set, get) => ({
 
   // Initialize auth state
   initialize: async () => {
+    if (!isSupabaseConfigured()) {
+      console.warn('Supabase not configured, skipping auth initialization');
+      set({
+        user: null,
+        profile: null,
+        loading: false,
+        initialized: true
+      });
+      return;
+    }
+
     try {
-      // Get current session first
+      // Ensure super admin exists
+      await ensureSuperAdmin();
+
+      // Get current session
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError) {
@@ -38,10 +52,28 @@ const useAuthStore = create((set, get) => ({
       if (user) {
         try {
           profile = await getCurrentProfile();
+          
+          // Special handling for super admin email
+          if (user.email === 'superadmin@workflowgene.cloud' && (!profile || profile.role !== 'super_admin')) {
+            const { error: updateError } = await supabase
+              .from('profiles')
+              .upsert({
+                id: user.id,
+                email: user.email,
+                first_name: 'Super',
+                last_name: 'Admin',
+                role: 'super_admin',
+                email_verified: true
+              }, {
+                onConflict: 'id'
+              });
+
+            if (!updateError) {
+              profile = await getCurrentProfile();
+            }
+          }
         } catch (profileError) {
           console.error('Profile fetch error:', profileError);
-          // Don't try to create profile automatically, just log the error
-          console.warn('Could not fetch user profile:', profileError);
         }
       }
 
@@ -111,7 +143,9 @@ const useAuthStore = create((set, get) => ({
         canViewAnalytics: true,
         canManageBilling: true,
         canManageSettings: true,
-        canAccessAllData: true
+        canAccessAllData: true,
+        canAccessCMS: true,
+        canManageSystem: true
       },
       org_admin: {
         canManageUsers: true,
@@ -120,7 +154,9 @@ const useAuthStore = create((set, get) => ({
         canViewAnalytics: true,
         canManageBilling: true,
         canManageSettings: true,
-        canAccessAllData: false
+        canAccessAllData: false,
+        canAccessCMS: false,
+        canManageSystem: false
       },
       manager: {
         canManageUsers: false,
@@ -129,7 +165,9 @@ const useAuthStore = create((set, get) => ({
         canViewAnalytics: true,
         canManageBilling: false,
         canManageSettings: false,
-        canAccessAllData: false
+        canAccessAllData: false,
+        canAccessCMS: false,
+        canManageSystem: false
       },
       user: {
         canManageUsers: false,
@@ -138,7 +176,9 @@ const useAuthStore = create((set, get) => ({
         canViewAnalytics: false,
         canManageBilling: false,
         canManageSettings: false,
-        canAccessAllData: false
+        canAccessAllData: false,
+        canAccessCMS: false,
+        canManageSystem: false
       }
     };
 
@@ -147,17 +187,19 @@ const useAuthStore = create((set, get) => ({
 }));
 
 // Supabase auth state listener
-supabase.auth.onAuthStateChange(async (event, session) => {
-  const { setUser, setProfile, clearAuth, refreshProfile } = useAuthStore.getState();
+if (isSupabaseConfigured()) {
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    const { setUser, setProfile, clearAuth, refreshProfile } = useAuthStore.getState();
 
-  if (event === 'SIGNED_IN' && session?.user) {
-    setUser(session.user);
-    await refreshProfile();
-  } else if (event === 'SIGNED_OUT') {
-    clearAuth();
-  } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-    setUser(session.user);
-  }
-});
+    if (event === 'SIGNED_IN' && session?.user) {
+      setUser(session.user);
+      await refreshProfile();
+    } else if (event === 'SIGNED_OUT') {
+      clearAuth();
+    } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+      setUser(session.user);
+    }
+  });
+}
 
 export default useAuthStore;

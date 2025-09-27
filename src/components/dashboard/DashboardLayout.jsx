@@ -10,7 +10,7 @@ import ThemeToggle from './ThemeToggle';
 
 const DashboardLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { profile, getPermissions } = useAuth();
+  const { profile, getPermissions, loading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const permissions = getPermissions();
@@ -61,8 +61,20 @@ const DashboardLayout = ({ children }) => {
   ];
 
   const filteredNavigation = navigationItems.filter(item => 
-    item.roles.includes(profile?.role)
+    profile?.role && item.roles.includes(profile.role)
   );
+
+  // Show loading state while auth is initializing
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <Icon name="Loader2" size={32} className="animate-spin text-primary mx-auto mb-4" />
+          <p className="text-text-secondary">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   const isActivePath = (path) => {
     if (path === '/dashboard') {

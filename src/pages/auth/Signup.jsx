@@ -91,28 +91,37 @@ const Signup = () => {
     e.preventDefault();
     
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
     if (!formData.agreeToTerms) {
-      alert('Please agree to the terms and conditions');
+      toast.error('Please agree to the terms and conditions');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      await signUp({
+      const result = await signUp({
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        organizationName: formData.organizationName
+        organizationName: formData.organizationName,
+        industry: formData.industry,
+        companySize: formData.companySize
       });
       
-      // For demo purposes, navigate directly to dashboard
-      navigate('/dashboard');
+      if (result.success) {
+        toast.success('Account created successfully!');
+        // Small delay to allow auth state to update
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 500);
+      } else {
+        throw new Error(result.error || 'Signup failed');
+      }
     } catch (error) {
       console.error('Signup error:', error);
       toast.error(error.message || 'Signup failed. Please try again.');
