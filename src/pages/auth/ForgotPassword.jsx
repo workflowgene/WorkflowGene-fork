@@ -19,9 +19,13 @@ const ForgotPassword = () => {
       const result = await resetPassword(email);
       if (result.success) {
         setIsSubmitted(true);
+        toast.success('Password reset email sent!');
+      } else {
+        throw new Error(result.error || 'Failed to send reset email');
       }
     } catch (error) {
       console.error('Password reset error:', error);
+      toast.error(error.message || 'Failed to send reset email');
     } finally {
       setIsSubmitting(false);
     }

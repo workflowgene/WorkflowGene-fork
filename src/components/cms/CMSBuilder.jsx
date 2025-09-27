@@ -347,13 +347,18 @@ const CMSBuilder = () => {
 
   if (profile?.role !== 'super_admin') {
     return (
-      <div className="text-center py-12">
-        <Icon name="Lock" size={48} className="text-text-secondary mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-text-primary mb-2">Access Denied</h3>
-        <p className="text-text-secondary">
-          CMS Builder is only available to super administrators
-        </p>
-      </div>
+      <DashboardLayout>
+        <div className="text-center py-12">
+          <Icon name="Lock" size={48} className="text-text-secondary mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-text-primary mb-2">Access Denied</h3>
+          <p className="text-text-secondary">
+            CMS Builder is only available to super administrators
+          </p>
+          <p className="text-text-secondary mt-2">
+            Current role: {profile?.role || 'Not set'}
+          </p>
+        </div>
+      </DashboardLayout>
     );
   }
 

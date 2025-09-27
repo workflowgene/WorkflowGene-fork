@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect } from 'react';
 import Routes from "./Routes";
 import { initGA } from './lib/analytics';
+import { Toaster } from 'react-hot-toast';
 import PWAInstaller from './components/pwa/PWAInstaller';
 import OfflineIndicator from './components/pwa/OfflineIndicator';
 
@@ -27,6 +28,22 @@ function App() {
   return (
     <>
       <Routes />
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: '#4aed88',
+            },
+          },
+        }}
+      />
       <PWAInstaller />
       <OfflineIndicator />
     </>

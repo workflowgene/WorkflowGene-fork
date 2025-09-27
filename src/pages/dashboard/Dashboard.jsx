@@ -8,13 +8,13 @@ import SystemHealthDashboard from '../../components/admin/SystemHealthDashboard'
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const Dashboard = () => {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, initialized } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  if (loading) {
+  if (loading || !initialized) {
     return <LoadingSpinner message="Loading dashboard..." />;
   }
 
