@@ -18,10 +18,11 @@ const useAuthStore = create((set, get) => ({
   // Initialize auth state
   initialize: async () => {
     try {
-      // Get auth user from Supabase
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (error) {
-        console.warn('Auth session error:', error);
+      // Get current session first
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.warn('Auth session error:', sessionError);
         set({
           user: null,
           profile: null,
@@ -31,31 +32,16 @@ const useAuthStore = create((set, get) => ({
         return;
       }
 
+      const user = session?.user || null;
+
       let profile = null;
       if (user) {
         try {
           profile = await getCurrentProfile();
         } catch (profileError) {
           console.error('Profile fetch error:', profileError);
-          // If profile doesn't exist, create a basic one
-          if (profileError.code === 'PGRST116') {
-            const { data: newProfile, error: createError } = await supabase
-              .from('profiles')
-              .insert({
-                id: user.id,
-                email: user.email,
-                first_name: user.user_metadata?.firstName || '',
-                last_name: user.user_metadata?.lastName || '',
-                role: user.email === 'superadmin@workflowgene.cloud' ? 'super_admin' : 'user',
-                email_verified: user.email_confirmed_at !== null
-              })
-              .select()
-              .single();
-            
-            if (!createError) {
-              profile = newProfile;
-            }
-          }
+          // Don't try to create profile automatically, just log the error
+          console.warn('Could not fetch user profile:', profileError);
         }
       }
 

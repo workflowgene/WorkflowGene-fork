@@ -1,8 +1,14 @@
 // src/lib/auth.js
 import { supabase } from './supabase';
+import { isSupabaseConfigured } from './supabase';
 
 // ✅ Get the current user session
 export const getCurrentUser = async () => {
+  if (!isSupabaseConfigured()) {
+    console.warn('Supabase not configured, returning null user');
+    return null;
+  }
+  
   const { data: { session }, error } = await supabase.auth.getSession();
   if (error) {
     console.error('Auth session error:', error);
@@ -13,6 +19,11 @@ export const getCurrentUser = async () => {
 
 // ✅ Get user profile from database (if you have a "profiles" table)
 export const getCurrentProfile = async () => {
+  if (!isSupabaseConfigured()) {
+    console.warn('Supabase not configured, returning null profile');
+    return null;
+  }
+  
   const user = await getCurrentUser();
   if (!user) return null;
 
@@ -25,7 +36,10 @@ export const getCurrentProfile = async () => {
     .eq('id', user.id)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    console.error('Profile fetch error:', error);
+    return null;
+  }
   return data;
 };
 

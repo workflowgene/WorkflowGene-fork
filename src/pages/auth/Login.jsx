@@ -6,6 +6,7 @@ import Input from '../../components/ui/Input';
 import Icon from '../../components/AppIcon';
 import { signIn } from '../../lib/auth';
 import { useAuth } from '../../components/auth/AuthProvider';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -17,16 +18,16 @@ const Login = () => {
   
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, profile } = useAuth();
+  const { isAuthenticated, profile, user } = useAuth();
 
   const from = location.state?.from?.pathname || '/dashboard';
 
   useEffect(() => {
     // Redirect if already authenticated
-    if (isAuthenticated && profile) {
+    if (isAuthenticated && user) {
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, profile, navigate, from]);
+  }, [isAuthenticated, user, navigate, from]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
