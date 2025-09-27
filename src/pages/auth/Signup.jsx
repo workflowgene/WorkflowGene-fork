@@ -27,7 +27,7 @@ const Signup = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
   
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
 
   const industryOptions = [
     { value: 'technology', label: 'Technology' },

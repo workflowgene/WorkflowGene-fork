@@ -18,9 +18,18 @@ const useAuthStore = create((set, get) => ({
   // Initialize auth state
   initialize: async () => {
     try {
-      // ✅ Get auth user from Supabase
+      // Get auth user from Supabase
       const { data: { user }, error } = await supabase.auth.getUser();
-      if (error) throw error;
+      if (error) {
+        console.warn('Auth session error:', error);
+        set({
+          user: null,
+          profile: null,
+          loading: false,
+          initialized: true
+        });
+        return;
+      }
 
       let profile = null;
       if (user) {

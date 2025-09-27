@@ -17,7 +17,7 @@ const Login = () => {
   
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
 
   const from = location.state?.from?.pathname || '/dashboard';
 
