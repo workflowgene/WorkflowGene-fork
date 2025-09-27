@@ -4,7 +4,10 @@ import { supabase } from './supabase';
 // ✅ Get the current user session
 export const getCurrentUser = async () => {
   const { data: { session }, error } = await supabase.auth.getSession();
-  if (error) throw error;
+  if (error) {
+    console.error('Auth session error:', error);
+    return null;
+  }
   return session?.user || null;
 };
 
