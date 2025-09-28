@@ -27,7 +27,7 @@ const Signup = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
   
   const navigate = useNavigate();
-  const { isAuthenticated, profile } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const industryOptions = [
     { value: 'technology', label: 'Technology' },
@@ -49,10 +49,10 @@ const Signup = () => {
   ];
 
   useEffect(() => {
-    if (isAuthenticated && profile) {
+    if (isAuthenticated && user) {
       navigate('/dashboard', { replace: true });
     }
-  }, [isAuthenticated, profile, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   useEffect(() => {
     // Calculate password strength

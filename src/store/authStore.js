@@ -33,10 +33,10 @@ const useAuthStore = create((set, get) => ({
       await ensureSuperAdmin();
 
       // Get current session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      const { data: { session } = {}, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError) {
-        console.warn('Auth session error:', sessionError);
+        console.warn('Auth session error:', sessionError.message);
         set({
           user: null,
           profile: null,

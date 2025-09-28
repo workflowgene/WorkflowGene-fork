@@ -347,7 +347,7 @@ const CMSBuilder = () => {
 
   if (profile?.role !== 'super_admin') {
     return (
-      <DashboardLayout>
+      <div className="min-h-screen bg-background p-6">
         <div className="text-center py-12">
           <Icon name="Lock" size={48} className="text-text-secondary mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-text-primary mb-2">Access Denied</h3>
@@ -358,7 +358,7 @@ const CMSBuilder = () => {
             Current role: {profile?.role || 'Not set'}
           </p>
         </div>
-      </DashboardLayout>
+      </div>
     );
   }
 

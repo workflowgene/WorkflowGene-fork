@@ -11,14 +11,14 @@ export const getCurrentUser = async () => {
   }
   
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const { data: { session } = {}, error } = await supabase.auth.getSession();
     if (error) {
-      console.error('Auth session error:', error);
+      console.warn('Auth session error:', error.message);
       return null;
     }
     return session?.user || null;
   } catch (error) {
-    console.error('Error getting current user:', error);
+    console.warn('Error getting current user:', error.message);
     return null;
   }
 };
@@ -233,32 +233,35 @@ export const ensureSuperAdmin = async () => {
       .from('profiles')
       .select('id')
       .eq('email', 'superadmin@workflowgene.cloud')
-      .eq('role', 'super_admin')
       .single();
 
-    if (checkError && checkError.code !== 'PGRST116') {
-      console.error('Error checking for super admin:', checkError);
-      return;
-    }
 
-    if (!existingAdmin) {
+    if (checkError && checkError.code === 'PGRST116') {
       // Create super admin profile if it doesn't exist
-      const { error: updateError } = await supabase
+      const { error: insertError } = await supabase
         .from('profiles')
-        .upsert({
+        .insert({
           email: 'superadmin@workflowgene.cloud',
           first_name: 'Super',
           last_name: 'Admin',
           role: 'super_admin',
           email_verified: true
-        }, {
-          onConflict: 'email'
         });
 
-      if (updateError) {
-        console.error('Error creating super admin:', updateError);
+      if (insertError) {
+        console.error('Error creating super admin:', insertError);
       } else {
         console.log('Super admin profile ensured');
+      }
+    } else if (existingAdmin && existingAdmin.role !== 'super_admin') {
+      // Update existing profile to super admin
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ role: 'super_admin' })
+        .eq('email', 'superadmin@workflowgene.cloud');
+
+      if (updateError) {
+        console.error('Error updating super admin role:', updateError);
       }
     }
   } catch (error) {
