@@ -45,6 +45,7 @@ const Login = () => {
       
       if (result.success) {
         toast.success('Login successful!');
+        console.log('Login successful for:', formData.email);
         // Small delay to allow auth state to update
         setTimeout(() => {
           navigate(from, { replace: true });

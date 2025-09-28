@@ -354,9 +354,11 @@ const CMSBuilder = () => {
           <p className="text-text-secondary">
             CMS Builder is only available to super administrators
           </p>
-          <p className="text-text-secondary mt-2">
-            Current role: {profile?.role || 'Not set'}
-          </p>
+          <div className="mt-4 text-xs text-text-secondary">
+            <p>Current user: {profile?.email || 'Not logged in'}</p>
+            <p>Current role: {profile?.role || 'Not set'}</p>
+            <p>User ID: {profile?.id || 'Not set'}</p>
+          </div>
         </div>
       </div>
     );

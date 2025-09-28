@@ -23,10 +23,14 @@ const Dashboard = () => {
     return (
       <DashboardLayout>
         <div className="p-6 text-center">
-          <h2 className="text-xl font-semibold mb-2">Welcome!</h2>
-          <p className="text-gray-600">
+          <h2 className="text-xl font-semibold mb-2">Profile Setup</h2>
+          <p className="text-text-secondary mb-4">
             Setting up your profile... Please wait a moment.
           </p>
+          <div className="text-xs text-text-secondary">
+            <p>User email: {user?.email}</p>
+            <p>User ID: {user?.id}</p>
+          </div>
           <LoadingSpinner />
         </div>
       </DashboardLayout>
@@ -39,7 +43,7 @@ const Dashboard = () => {
       <DashboardLayout>
         <div className="p-6 text-center">
           <h2 className="text-xl font-semibold mb-2">Not signed in</h2>
-          <p className="text-gray-600">
+          <p className="text-text-secondary">
             Please sign in to access your dashboard.
           </p>
         </div>
