@@ -237,7 +237,8 @@ export const ensureSuperAdmin = async () => {
 
 
     if (checkError && checkError.code === 'PGRST116') {
-      // Create super admin profile if it doesn't exist
+      // Super admin doesn't exist, create it
+      console.log('Creating super admin profile...');
       const { error: insertError } = await supabase
         .from('profiles')
         .insert({
@@ -245,23 +246,30 @@ export const ensureSuperAdmin = async () => {
           first_name: 'Super',
           last_name: 'Admin',
           role: 'super_admin',
-          email_verified: true
+          email_verified: true,
+          organization_id: null
         });
 
       if (insertError) {
         console.error('Error creating super admin:', insertError);
       } else {
-        console.log('Super admin profile ensured');
+        console.log('Super admin profile created successfully');
       }
-    } else if (existingAdmin && existingAdmin.role !== 'super_admin') {
-      // Update existing profile to super admin
+    } else if (existingAdmin) {
+      // Super admin exists, ensure role is correct
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ role: 'super_admin' })
+        .update({ 
+          role: 'super_admin',
+          email_verified: true,
+          organization_id: null
+        })
         .eq('email', 'superadmin@workflowgene.cloud');
 
       if (updateError) {
         console.error('Error updating super admin role:', updateError);
+      } else {
+        console.log('Super admin role updated');
       }
     }
   } catch (error) {

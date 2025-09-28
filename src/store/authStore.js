@@ -54,7 +54,8 @@ const useAuthStore = create((set, get) => ({
           profile = await getCurrentProfile();
           
           // Special handling for super admin email
-          if (user.email === 'superadmin@workflowgene.cloud' && (!profile || profile.role !== 'super_admin')) {
+          if (user.email === 'superadmin@workflowgene.cloud') {
+            console.log('Super admin user detected, ensuring profile...');
             const { error: updateError } = await supabase
               .from('profiles')
               .upsert({
@@ -63,12 +64,16 @@ const useAuthStore = create((set, get) => ({
                 first_name: 'Super',
                 last_name: 'Admin',
                 role: 'super_admin',
-                email_verified: true
+                email_verified: true,
+                organization_id: null
               }, {
                 onConflict: 'id'
               });
 
-            if (!updateError) {
+            if (updateError) {
+              console.error('Error upserting super admin profile:', updateError);
+            } else {
+              console.log('Super admin profile upserted successfully');
               profile = await getCurrentProfile();
             }
           }
@@ -76,6 +81,8 @@ const useAuthStore = create((set, get) => ({
           console.error('Profile fetch error:', profileError);
         }
       }
+
+      console.log('Auth state:', { user: user?.email, profile: profile?.role });
 
       set({
         user,

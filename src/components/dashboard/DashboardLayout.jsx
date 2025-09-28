@@ -60,9 +60,10 @@ const DashboardLayout = ({ children }) => {
     }
   ];
 
-  const filteredNavigation = navigationItems.filter(item => 
-    profile?.role && item.roles.includes(profile.role)
-  );
+  const filteredNavigation = navigationItems.filter(item => {
+    if (!profile?.role) return false;
+    return item.roles.includes(profile.role);
+  });
 
   // Show loading state while auth is initializing
   if (loading) {
