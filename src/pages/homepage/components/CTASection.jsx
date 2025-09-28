@@ -55,7 +55,7 @@ const CTASection = () => {
               iconName="Play"
               iconPosition="left"
               className="bg-white text-primary hover:bg-white/90 btn-organic text-lg px-8 py-4"
-              onClick={startFreeTrial}
+              onClick={() => window.location.href = '/signup'}
             >
               Start Free Trial
             </Button>

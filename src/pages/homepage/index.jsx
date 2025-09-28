@@ -5,8 +5,8 @@ import Footer from '../../components/ui/Footer';
 import AIChatbot from '../../components/ui/AIChatbot';
 import HeroSection from './components/HeroSection';
 import IndustryPathways from './components/IndustryPathways';
-import WorkflowBuilder from './components/WorkflowBuilder';
-import FeaturesPreview from './components/FeaturesPreview';
+import WorkflowDemo from './components/WorkflowDemo';
+import FeaturesOverview from './components/FeaturesOverview';
 import SocialProof from './components/SocialProof';
 import CTASection from './components/CTASection';
 import { initGA, trackPageView } from '../../lib/analytics';
@@ -55,8 +55,8 @@ const Homepage = () => {
       <main>
         <HeroSection />
         <IndustryPathways />
-        <WorkflowBuilder />
-        <FeaturesPreview />
+        <WorkflowDemo />
+        <FeaturesOverview />
         <SocialProof />
         <CTASection />
       </main>

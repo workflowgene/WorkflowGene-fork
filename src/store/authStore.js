@@ -1,7 +1,7 @@
 // store/authStore.js
 import { create } from 'zustand';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { getCurrentProfile, ensureSuperAdmin } from '../lib/auth';
+import { supabase, isSupabaseConfigured, clearInvalidSession } from '../lib/supabase';
+import { getCurrentProfile } from '../lib/auth';
 
 const useAuthStore = create((set, get) => ({
   // State
@@ -9,11 +9,13 @@ const useAuthStore = create((set, get) => ({
   profile: null,
   loading: true,
   initialized: false,
+  error: null,
 
   // Actions
   setUser: (user) => set({ user }),
   setProfile: (profile) => set({ profile }),
   setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error }),
 
   // Initialize auth state
   initialize: async () => {
@@ -23,86 +25,169 @@ const useAuthStore = create((set, get) => ({
         user: null,
         profile: null,
         loading: false,
-        initialized: true
+        initialized: true,
+        error: 'Supabase not configured'
       });
       return;
     }
 
     try {
-      // Ensure super admin exists
-      await ensureSuperAdmin();
+      set({ loading: true, error: null });
 
-      // Get current session
+      // Get current session with error handling
       const { data: { session } = {}, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError) {
-        console.warn('Auth session error:', sessionError.message);
-        set({
-          user: null,
-          profile: null,
-          loading: false,
-          initialized: true
-        });
-        return;
+        console.warn('Session error:', sessionError.message);
+        
+        // If refresh token is invalid, clear the session
+        if (sessionError.message?.includes('refresh_token_not_found') || 
+            sessionError.message?.includes('Invalid Refresh Token')) {
+          await clearInvalidSession();
+          set({
+            user: null,
+            profile: null,
+            loading: false,
+            initialized: true,
+            error: null
+          });
+          return;
+        }
+        
+        throw sessionError;
       }
 
       const user = session?.user || null;
-
       let profile = null;
+
       if (user) {
         try {
-          profile = await getCurrentProfile();
+          // Get profile with retry logic
+          let retryCount = 0;
+          const maxRetries = 3;
           
-          // Special handling for super admin email
-          if (user.email === 'superadmin@workflowgene.cloud') {
-            console.log('Super admin user detected, ensuring profile...');
-            const { error: updateError } = await supabase
-              .from('profiles')
-              .upsert({
-                id: user.id,
-                email: user.email,
-                first_name: 'Super',
-                last_name: 'Admin',
-                role: 'super_admin',
-                email_verified: true,
-                organization_id: null
-              }, {
-                onConflict: 'id'
-              });
+          while (retryCount < maxRetries) {
+            try {
+              const { data, error } = await supabase
+                .from('profiles')
+                .select(`
+                  *,
+                  organization:organizations(*)
+                `)
+                .eq('id', user.id)
+                .single();
 
-            if (updateError) {
-              console.error('Error upserting super admin profile:', updateError);
-            } else {
-              console.log('Super admin profile upserted successfully');
-              profile = await getCurrentProfile();
+              if (error) {
+                if (error.code === 'PGRST116') {
+                  // Profile doesn't exist, create it
+                  console.log('Creating profile for user:', user.email);
+                  
+                  const { error: insertError } = await supabase
+                    .from('profiles')
+                    .insert({
+                      id: user.id,
+                      email: user.email,
+                      email_verified: !!user.email_confirmed_at,
+                      role: user.email === 'superadmin@workflowgene.cloud' ? 'super_admin' : 'user',
+                      first_name: user.user_metadata?.first_name || '',
+                      last_name: user.user_metadata?.last_name || '',
+                      created_at: new Date().toISOString(),
+                      updated_at: new Date().toISOString()
+                    });
+
+                  if (insertError) {
+                    console.error('Error creating profile:', insertError);
+                    throw insertError;
+                  }
+                  
+                  // Retry fetching the profile
+                  retryCount++;
+                  continue;
+                }
+                throw error;
+              }
+
+              profile = data;
+              break;
+            } catch (retryError) {
+              retryCount++;
+              if (retryCount >= maxRetries) {
+                throw retryError;
+              }
+              // Wait before retry
+              await new Promise(resolve => setTimeout(resolve, 1000));
             }
           }
+
+          // Special handling for super admin
+          if (user.email === 'superadmin@workflowgene.cloud' && profile?.role !== 'super_admin') {
+            console.log('Updating super admin role...');
+            const { error: updateError } = await supabase
+              .from('profiles')
+              .update({
+                role: 'super_admin',
+                email_verified: true,
+                first_name: 'Super',
+                last_name: 'Admin',
+                organization_id: null,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', user.id);
+
+            if (updateError) {
+              console.error('Error updating super admin:', updateError);
+            } else {
+              // Refetch profile
+              const { data: updatedProfile } = await supabase
+                .from('profiles')
+                .select(`
+                  *,
+                  organization:organizations(*)
+                `)
+                .eq('id', user.id)
+                .single();
+              profile = updatedProfile;
+            }
+          }
+
         } catch (profileError) {
-          console.error('Profile fetch error:', profileError);
+          console.error('Profile error:', profileError);
+          // Don't fail completely, just log the error
+          profile = null;
         }
       }
 
-      console.log('Auth state:', { user: user?.email, profile: profile?.role });
+      console.log('Auth initialized:', { 
+        userEmail: user?.email, 
+        profileRole: profile?.role,
+        profileId: profile?.id 
+      });
 
       set({
         user,
         profile,
         loading: false,
-        initialized: true
+        initialized: true,
+        error: null
       });
+
     } catch (error) {
       console.error('Auth initialization error:', error);
       set({
         user: null,
         profile: null,
         loading: false,
-        initialized: true
+        initialized: true,
+        error: error.message
       });
     }
   },
 
   // Refresh profile data
   refreshProfile: async () => {
+    const { user } = get();
+    if (!user) return null;
+
     try {
       const profile = await getCurrentProfile();
       set({ profile });
@@ -117,7 +202,8 @@ const useAuthStore = create((set, get) => ({
   clearAuth: () => set({
     user: null,
     profile: null,
-    loading: false
+    loading: false,
+    error: null
   }),
 
   // Check if user has required role
@@ -193,18 +279,28 @@ const useAuthStore = create((set, get) => ({
   }
 }));
 
-// Supabase auth state listener
+// Supabase auth state listener with error handling
 if (isSupabaseConfigured()) {
   supabase.auth.onAuthStateChange(async (event, session) => {
     const { setUser, setProfile, clearAuth, refreshProfile } = useAuthStore.getState();
 
-    if (event === 'SIGNED_IN' && session?.user) {
-      setUser(session.user);
-      await refreshProfile();
-    } else if (event === 'SIGNED_OUT') {
-      clearAuth();
-    } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-      setUser(session.user);
+    console.log('Auth state change:', event, session?.user?.email);
+
+    try {
+      if (event === 'SIGNED_IN' && session?.user) {
+        setUser(session.user);
+        await refreshProfile();
+      } else if (event === 'SIGNED_OUT') {
+        clearAuth();
+      } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+        setUser(session.user);
+      }
+    } catch (error) {
+      console.error('Auth state change error:', error);
+      if (error.message?.includes('refresh_token_not_found')) {
+        await clearInvalidSession();
+        clearAuth();
+      }
     }
   });
 }

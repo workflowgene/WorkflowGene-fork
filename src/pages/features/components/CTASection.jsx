@@ -156,6 +156,7 @@ const CTASection = () => {
               className="btn-organic"
               iconName="ArrowRight"
               iconPosition="right"
+              onClick={() => window.location.href = '/signup'}
             >
               Get Started Now
             </Button>

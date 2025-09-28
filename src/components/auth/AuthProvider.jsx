@@ -23,6 +23,8 @@ export const AuthProvider = ({ children }) => {
     ...authStore,
     isAuthenticated: !!authStore.user,
     loading: authStore.loading,
+    initialized: authStore.initialized,
+    error: authStore.error,
     hasRole: authStore.hasRole,
     canAccessOrganization: authStore.canAccessOrganization,
     getPermissions: authStore.getPermissions

@@ -3,7 +3,7 @@ import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 import { startFreeTrial } from '../../../utils/navigation';
 
-const WorkflowBuilder = () => {
+const WorkflowDemo = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -44,15 +44,6 @@ const WorkflowBuilder = () => {
       type: 'action',
       examples: ['Send notifications', 'Update databases', 'Generate reports', 'Create tasks'],
       color: 'from-emerald-500 to-teal-600'
-    },
-    {
-      id: 5,
-      title: 'Monitor & Optimize',
-      description: 'Track performance and improve',
-      icon: 'BarChart3',
-      type: 'monitor',
-      examples: ['Performance metrics', 'Error tracking', 'Success rates', 'Optimization suggestions'],
-      color: 'from-rose-500 to-red-600'
     }
   ];
 
@@ -60,9 +51,7 @@ const WorkflowBuilder = () => {
     { name: 'Slack', icon: 'MessageSquare', connected: true },
     { name: 'Gmail', icon: 'Mail', connected: true },
     { name: 'Salesforce', icon: 'Users', connected: false },
-    { name: 'Dropbox', icon: 'Cloud', connected: true },
-    { name: 'Zapier', icon: 'Zap', connected: false },
-    { name: 'Microsoft', icon: 'Monitor', connected: true }
+    { name: 'Dropbox', icon: 'Cloud', connected: true }
   ];
 
   useEffect(() => {
@@ -162,7 +151,7 @@ const WorkflowBuilder = () => {
                       }`}
                     >
                       {/* Step Icon */}
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
                         activeStep === index
                           ? `bg-gradient-to-br ${step?.color} text-white`
                           : completedSteps?.includes(index)
@@ -178,14 +167,16 @@ const WorkflowBuilder = () => {
                       {/* Step Content */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-3 mb-2">
-                          <h4 className="text-lg font-semibold text-text-primary">
+                          <h4 className={`text-lg font-semibold mb-2 ${
+                            activeStep === index ? 'text-primary' : 'text-text-primary'
+                          }`}>
                             {step?.title}
                           </h4>
                           <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                             step?.type === 'trigger' ? 'bg-blue-100 text-blue-700' :
                             step?.type === 'action' ? 'bg-purple-100 text-purple-700' :
                             step?.type === 'condition' ? 'bg-amber-100 text-amber-700' :
-                            step?.type === 'monitor'? 'bg-rose-100 text-rose-700' : 'bg-gray-100 text-gray-700'
+                            'bg-gray-100 text-gray-700'
                           }`}>
                             {step?.type}
                           </span>
@@ -313,7 +304,7 @@ const WorkflowBuilder = () => {
                 fullWidth
                 iconName="ArrowRight"
                 iconPosition="right"
-                onClick={startFreeTrial}
+                onClick={() => window.location.href = '/signup'}
               >
                 Try Builder Free
               </Button>
@@ -325,4 +316,4 @@ const WorkflowBuilder = () => {
   );
 };
 
-export default WorkflowBuilder;
+export default WorkflowDemo;

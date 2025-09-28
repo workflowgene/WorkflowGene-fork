@@ -1,9 +1,8 @@
 // src/lib/auth.js
-import { supabase } from './supabase';
-import { isSupabaseConfigured } from './supabase';
+import { supabase, isSupabaseConfigured, clearInvalidSession } from './supabase';
 import toast from 'react-hot-toast';
 
-// ✅ Get the current user session
+// ✅ Get the current user session with error handling
 export const getCurrentUser = async () => {
   if (!isSupabaseConfigured()) {
     console.warn('Supabase not configured, returning null user');
@@ -12,10 +11,20 @@ export const getCurrentUser = async () => {
   
   try {
     const { data: { session } = {}, error } = await supabase.auth.getSession();
+    
     if (error) {
       console.warn('Auth session error:', error.message);
+      
+      // Handle invalid refresh token
+      if (error.message?.includes('refresh_token_not_found') || 
+          error.message?.includes('Invalid Refresh Token')) {
+        await clearInvalidSession();
+        return null;
+      }
+      
       return null;
     }
+    
     return session?.user || null;
   } catch (error) {
     console.warn('Error getting current user:', error.message);
@@ -23,7 +32,7 @@ export const getCurrentUser = async () => {
   }
 };
 
-// ✅ Get user profile from database
+// ✅ Get user profile from database with retry logic
 export const getCurrentProfile = async () => {
   if (!isSupabaseConfigured()) {
     console.warn('Supabase not configured, returning null profile');
@@ -44,9 +53,50 @@ export const getCurrentProfile = async () => {
       .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        // Profile doesn't exist, create it
+        console.log('Creating missing profile for user:', user.email);
+        
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            email_verified: !!user.email_confirmed_at,
+            role: user.email === 'superadmin@workflowgene.cloud' ? 'super_admin' : 'user',
+            first_name: user.user_metadata?.first_name || '',
+            last_name: user.user_metadata?.last_name || '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          });
+
+        if (insertError) {
+          console.error('Error creating profile:', insertError);
+          return null;
+        }
+
+        // Retry fetching the profile
+        const { data: newProfile, error: fetchError } = await supabase
+          .from('profiles')
+          .select(`
+            *,
+            organization:organizations(*)
+          `)
+          .eq('id', user.id)
+          .single();
+
+        if (fetchError) {
+          console.error('Error fetching new profile:', fetchError);
+          return null;
+        }
+
+        return newProfile;
+      }
+      
       console.error('Profile fetch error:', error);
       return null;
     }
+    
     return data;
   } catch (error) {
     console.error('Error getting current profile:', error);
@@ -54,26 +104,40 @@ export const getCurrentProfile = async () => {
   }
 };
 
-// ✅ Sign in user
+// ✅ Sign in user with improved error handling
 export const signIn = async ({ email, password }) => {
   if (!isSupabaseConfigured()) {
     throw new Error('Authentication service not configured');
   }
 
   try {
+    // Clear any existing invalid sessions first
+    await clearInvalidSession();
+
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim(),
       password
     });
     
-    if (error) throw error;
+    if (error) {
+      console.error('Sign in error:', error);
+      throw error;
+    }
     
     // Update last login timestamp
     if (data.user) {
-      await supabase
-        .from('profiles')
-        .update({ last_login: new Date().toISOString() })
-        .eq('id', data.user.id);
+      try {
+        await supabase
+          .from('profiles')
+          .update({ 
+            last_login: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', data.user.id);
+      } catch (updateError) {
+        console.warn('Could not update last login:', updateError);
+        // Don't fail the login for this
+      }
     }
     
     return { success: true, data };
@@ -83,16 +147,19 @@ export const signIn = async ({ email, password }) => {
   }
 };
 
-// ✅ Sign up user
+// ✅ Sign up user with improved organization handling
 export const signUp = async ({ email, password, firstName, lastName, organizationName, industry, companySize }) => {
   if (!isSupabaseConfigured()) {
     throw new Error('Authentication service not configured');
   }
 
   try {
+    // Clear any existing sessions
+    await clearInvalidSession();
+
     // First, sign up the user
     const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
+      email: email.trim(),
       password,
       options: {
         data: {
@@ -107,38 +174,54 @@ export const signUp = async ({ email, password, firstName, lastName, organizatio
     if (authData.user) {
       // Create organization if provided
       let organizationId = null;
-      if (organizationName) {
-        const { data: orgData, error: orgError } = await supabase
-          .from('organizations')
-          .insert({
-            name: organizationName,
-            slug: organizationName.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-            industry: industry,
-            company_size: companySize
-          })
-          .select()
-          .single();
+      if (organizationName?.trim()) {
+        try {
+          const { data: orgData, error: orgError } = await supabase
+            .from('organizations')
+            .insert({
+              name: organizationName.trim(),
+              slug: organizationName.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+              industry: industry,
+              company_size: companySize,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            })
+            .select()
+            .single();
 
-        if (orgError) {
-          console.error('Organization creation error:', orgError);
-        } else {
-          organizationId = orgData.id;
+          if (orgError) {
+            console.error('Organization creation error:', orgError);
+          } else {
+            organizationId = orgData.id;
+          }
+        } catch (orgError) {
+          console.warn('Could not create organization:', orgError);
         }
       }
 
-      // Update profile with additional information
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({
-          first_name: firstName,
-          last_name: lastName,
-          organization_id: organizationId,
-          role: organizationId ? 'org_admin' : 'user' // First user in org becomes admin
-        })
-        .eq('id', authData.user.id);
+      // Update or create profile with additional information
+      try {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: authData.user.id,
+            email: email.trim(),
+            first_name: firstName,
+            last_name: lastName,
+            organization_id: organizationId,
+            role: organizationId ? 'org_admin' : 'user', // First user in org becomes admin
+            email_verified: !!authData.user.email_confirmed_at,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }, {
+            onConflict: 'id'
+          });
 
-      if (profileError) {
-        console.error('Profile update error:', profileError);
+        if (profileError) {
+          console.error('Profile update error:', profileError);
+        }
+      } catch (profileError) {
+        console.warn('Could not update profile:', profileError);
       }
     }
     
@@ -154,6 +237,10 @@ export const signOut = async () => {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+    
+    // Clear any cached data
+    await clearInvalidSession();
+    
     return { success: true };
   } catch (error) {
     console.error('Sign out error:', error);
@@ -168,7 +255,7 @@ export const resetPassword = async (email) => {
   }
 
   try {
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
       redirectTo: `${window.location.origin}/reset-password`
     });
     
@@ -223,21 +310,24 @@ export const updateProfile = async (profileData) => {
   }
 };
 
-// ✅ Create super admin user if it doesn't exist
+// ✅ Ensure super admin exists
 export const ensureSuperAdmin = async () => {
   if (!isSupabaseConfigured()) return;
 
   try {
-    // Check if super admin exists
+    // Use a direct query to check for super admin
     const { data: existingAdmin, error: checkError } = await supabase
       .from('profiles')
-      .select('id')
+      .select('id, role')
       .eq('email', 'superadmin@workflowgene.cloud')
-      .single();
+      .maybeSingle();
 
+    if (checkError) {
+      console.error('Error checking super admin:', checkError);
+      return;
+    }
 
-    if (checkError && checkError.code === 'PGRST116') {
-      // Super admin doesn't exist, create it
+    if (!existingAdmin) {
       console.log('Creating super admin profile...');
       const { error: insertError } = await supabase
         .from('profiles')
@@ -247,7 +337,9 @@ export const ensureSuperAdmin = async () => {
           last_name: 'Admin',
           role: 'super_admin',
           email_verified: true,
-          organization_id: null
+          organization_id: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         });
 
       if (insertError) {
@@ -255,14 +347,17 @@ export const ensureSuperAdmin = async () => {
       } else {
         console.log('Super admin profile created successfully');
       }
-    } else if (existingAdmin) {
-      // Super admin exists, ensure role is correct
+    } else if (existingAdmin.role !== 'super_admin') {
+      console.log('Updating super admin role...');
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ 
           role: 'super_admin',
           email_verified: true,
-          organization_id: null
+          first_name: 'Super',
+          last_name: 'Admin',
+          organization_id: null,
+          updated_at: new Date().toISOString()
         })
         .eq('email', 'superadmin@workflowgene.cloud');
 

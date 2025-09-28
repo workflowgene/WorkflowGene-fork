@@ -10,7 +10,7 @@ import ThemeToggle from './ThemeToggle';
 
 const DashboardLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { profile, getPermissions, loading } = useAuth();
+  const { profile, getPermissions, loading, initialized, user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const permissions = getPermissions();
@@ -66,7 +66,7 @@ const DashboardLayout = ({ children }) => {
   });
 
   // Show loading state while auth is initializing
-  if (loading) {
+  if (loading || !initialized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -77,6 +77,12 @@ const DashboardLayout = ({ children }) => {
     );
   }
 
+  // Debug information for troubleshooting
+  console.log('Dashboard Layout Debug:', {
+    user: user?.email,
+    profile: profile?.role,
+    filteredNavigation: filteredNavigation.map(n => n.name)
+  });
   const isActivePath = (path) => {
     if (path === '/dashboard') {
       return location.pathname === '/dashboard';
@@ -117,6 +123,17 @@ const DashboardLayout = ({ children }) => {
             </button>
           </div>
 
+          {/* Debug Info (only for super admin) */}
+          {profile?.role === 'super_admin' && (
+            <div className="p-4 bg-warning/10 border-b border-border">
+              <div className="text-xs text-warning">
+                <p>Debug Info:</p>
+                <p>Role: {profile?.role}</p>
+                <p>Email: {profile?.email}</p>
+                <p>Menu Items: {filteredNavigation.length}</p>
+              </div>
+            </div>
+          )}
           {/* Navigation */}
           <nav className="flex-1 p-6 space-y-2">
             {filteredNavigation.map((item) => (
@@ -134,6 +151,15 @@ const DashboardLayout = ({ children }) => {
                 <span className="font-medium">{item.name}</span>
               </Link>
             ))}
+            
+            {/* Show message if no navigation items */}
+            {filteredNavigation.length === 0 && (
+              <div className="text-center py-8">
+                <Icon name="AlertCircle" size={32} className="text-text-secondary mx-auto mb-2" />
+                <p className="text-sm text-text-secondary">No menu items available</p>
+                <p className="text-xs text-text-secondary mt-1">Role: {profile?.role || 'None'}</p>
+              </div>
+            )}
           </nav>
 
           {/* User Section */}

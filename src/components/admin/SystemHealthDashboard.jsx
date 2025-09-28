@@ -169,12 +169,37 @@ const SystemHealthDashboard = () => {
 
   if (profile?.role !== 'super_admin') {
     return (
-      <div className="text-center py-12">
-        <Icon name="Lock" size={48} className="text-text-secondary mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-text-primary mb-2">Access Denied</h3>
-        <p className="text-text-secondary">
-          This dashboard is only available to super administrators
-        </p>
+      <div className="space-y-6">
+        <div className="bg-card rounded-genetic-lg p-8 text-center shadow-organic-sm">
+          <Icon name="Shield" size={64} className="text-primary mx-auto mb-6" />
+          <h2 className="text-2xl font-bold text-text-primary mb-4">System Health Dashboard</h2>
+          <p className="text-text-secondary mb-6">
+            Monitor platform performance, system metrics, and health status.
+          </p>
+          
+          <div className="bg-error/10 border border-error/20 rounded-genetic-md p-4 mb-6">
+            <div className="flex items-center space-x-2 mb-2">
+              <Icon name="Lock" size={16} className="text-error" />
+              <span className="font-semibold text-error">Access Restricted</span>
+            </div>
+            <p className="text-sm text-text-secondary">
+              This dashboard is only available to super administrators.
+            </p>
+            <div className="mt-2 text-xs text-text-secondary">
+              <p>Current role: {profile?.role || 'Not set'}</p>
+              <p>Required role: super_admin</p>
+            </div>
+          </div>
+          
+          <Button 
+            variant="default"
+            onClick={() => window.location.href = '/dashboard'}
+            iconName="ArrowLeft"
+            iconPosition="left"
+          >
+            Back to Dashboard
+          </Button>
+        </div>
       </div>
     );
   }
