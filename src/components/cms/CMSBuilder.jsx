@@ -347,17 +347,41 @@ const CMSBuilder = () => {
 
   if (profile?.role !== 'super_admin') {
     return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="text-center py-12">
-          <Icon name="Lock" size={48} className="text-text-secondary mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-text-primary mb-2">Access Denied</h3>
-          <p className="text-text-secondary">
-            CMS Builder is only available to super administrators
+      <div className="space-y-6">
+        <div className="bg-card rounded-genetic-lg p-8 text-center shadow-organic-sm">
+          <Icon name="Lock" size={64} className="text-error mx-auto mb-6" />
+          <h2 className="text-2xl font-bold text-text-primary mb-4">Access Denied</h2>
+          <p className="text-text-secondary mb-6">
+            CMS Builder is only available to super administrators.
           </p>
-          <div className="mt-4 text-xs text-text-secondary">
-            <p>Current user: {profile?.email || 'Not logged in'}</p>
-            <p>Current role: {profile?.role || 'Not set'}</p>
-            <p>User ID: {profile?.id || 'Not set'}</p>
+          
+          <div className="bg-muted rounded-genetic-md p-4 mb-6">
+            <h3 className="font-semibold text-text-primary mb-2">Debug Information:</h3>
+            <div className="text-sm text-text-secondary space-y-1">
+              <p>Current user: {profile?.email || 'Not logged in'}</p>
+              <p>Current role: {profile?.role || 'Not set'}</p>
+              <p>User ID: {profile?.id || 'Not set'}</p>
+              <p>Required role: super_admin</p>
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              variant="default"
+              onClick={() => window.location.href = '/dashboard'}
+              iconName="ArrowLeft"
+              iconPosition="left"
+            >
+              Back to Dashboard
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => window.location.reload()}
+              iconName="RefreshCw"
+              iconPosition="left"
+            >
+              Refresh Page
+            </Button>
           </div>
         </div>
       </div>

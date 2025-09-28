@@ -11,6 +11,8 @@ export const supabase = createClient(
     auth: {
       persistSession: true,
       autoRefreshToken: true,
+      detectSessionInUrl: true,
+      flowType: 'pkce'
     },
   }
 );
@@ -18,4 +20,15 @@ export const supabase = createClient(
 // Check if Supabase is properly configured
 export const isSupabaseConfigured = () => {
   return !!(supabaseUrl && supabaseAnonKey);
+};
+
+// Clear invalid sessions
+export const clearInvalidSession = async () => {
+  try {
+    await supabase.auth.signOut();
+    localStorage.removeItem('supabase.auth.token');
+    sessionStorage.removeItem('supabase.auth.token');
+  } catch (error) {
+    console.warn('Error clearing session:', error);
+  }
 };

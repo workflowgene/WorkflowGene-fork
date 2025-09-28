@@ -6,7 +6,7 @@ export const openCalendlyDemo = () => {
 
 export const startFreeTrial = () => {
   // Redirect to signup page for free trial
-  window.location.href = '/signup';
+  window.location.href = '/pricing';
 };
 
 export const openExternalLink = (url) => {

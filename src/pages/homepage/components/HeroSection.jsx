@@ -116,7 +116,7 @@ const HeroSection = () => {
                   className="btn-organic"
                   iconName="Play"
                   iconPosition="left"
-                  onClick={startFreeTrial}
+                  onClick={() => window.location.href = '/signup'}
                 >
                   Start Free Trial
                 </Button>

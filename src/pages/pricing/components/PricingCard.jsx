@@ -61,6 +61,13 @@ const PricingCard = ({ plan, billingCycle, isPopular = false }) => {
           className="mb-6"
           iconName={plan?.price === 'custom' ? 'MessageCircle' : 'ArrowRight'}
           iconPosition="right"
+          onClick={() => {
+            if (plan?.price === 'custom') {
+              window.location.href = '/contact';
+            } else {
+              window.location.href = '/signup';
+            }
+          }}
         >
           {plan?.price === 'custom' ? 'Contact Sales' : plan?.price === 0 ? 'Start Free' : 'Start Trial'}
         </Button>

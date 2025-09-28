@@ -8,7 +8,7 @@ import SystemHealthDashboard from '../../components/admin/SystemHealthDashboard'
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const Dashboard = () => {
-  const { user, profile, loading, initialized } = useAuth();
+  const { user, profile, loading, initialized, error } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -18,11 +18,27 @@ const Dashboard = () => {
     return <LoadingSpinner message="Loading dashboard..." />;
   }
 
+  // Handle auth errors
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="p-6 text-center">
+          <Icon name="AlertCircle" size={48} className="text-error mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2 text-text-primary">Authentication Error</h2>
+          <p className="text-text-secondary mb-4">{error}</p>
+          <Button variant="default" onClick={() => window.location.reload()}>
+            Retry
+          </Button>
+        </div>
+      </DashboardLayout>
+    );
+  }
   // Handle case: user exists but profile is missing
   if (user && !profile) {
     return (
       <DashboardLayout>
         <div className="p-6 text-center">
+          <Icon name="User" size={48} className="text-warning mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Profile Setup</h2>
           <p className="text-text-secondary mb-4">
             Setting up your profile... Please wait a moment.
@@ -31,7 +47,9 @@ const Dashboard = () => {
             <p>User email: {user?.email}</p>
             <p>User ID: {user?.id}</p>
           </div>
-          <LoadingSpinner />
+          <div className="mt-4">
+            <Icon name="Loader2" size={24} className="animate-spin text-primary mx-auto" />
+          </div>
         </div>
       </DashboardLayout>
     );
@@ -42,10 +60,18 @@ const Dashboard = () => {
     return (
       <DashboardLayout>
         <div className="p-6 text-center">
+          <Icon name="UserX" size={48} className="text-error mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Not signed in</h2>
           <p className="text-text-secondary">
             Please sign in to access your dashboard.
           </p>
+          <Button 
+            variant="default" 
+            className="mt-4"
+            onClick={() => window.location.href = '/login'}
+          >
+            Go to Login
+          </Button>
         </div>
       </DashboardLayout>
     );
@@ -53,6 +79,8 @@ const Dashboard = () => {
 
   // Render dashboards based on profile role + organization industry
   const renderDashboardContent = () => {
+    console.log('Rendering dashboard for role:', profile?.role);
+    
     if (profile?.role === 'super_admin') {
       return <SystemHealthDashboard />;
     }

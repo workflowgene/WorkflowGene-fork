@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
-import { openCalendlyDemo, startFreeTrial } from '../../../utils/navigation';
+import { openCalendlyDemo } from '../../../utils/navigation';
 
-const FeaturesPreview = () => {
+const FeaturesOverview = () => {
   const [activeFeature, setActiveFeature] = useState(0);
 
   const features = [
@@ -50,20 +50,6 @@ const FeaturesPreview = () => {
         'Enterprise security'
       ],
       stats: { integrations: '500+', uptime: '99.99%', dataSync: '< 1s' }
-    },
-    {
-      id: 'analytics',
-      title: 'Advanced Analytics',
-      description: 'Get deep insights into your workflow performance with comprehensive reporting.',
-      icon: 'BarChart3',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      benefits: [
-        'Real-time dashboards',
-        'Custom reports',
-        'Performance metrics',
-        'ROI tracking'
-      ],
-      stats: { metrics: '50+', reports: 'Custom', insights: 'Real-time' }
     }
   ];
 
@@ -203,9 +189,7 @@ const FeaturesPreview = () => {
                            key === 'predictions' ? 'Predictions Made' :
                            key === 'optimization' ? 'Performance Boost' :
                            key === 'uptime' ? 'System Uptime' :
-                           key === 'dataSync' ? 'Sync Speed' :
-                           key === 'reports' ? 'Report Types' :
-                           key === 'insights' ? 'Insight Delivery' : key}
+                           key === 'dataSync' ? 'Sync Speed' : key}
                         </div>
                       </div>
                     ))}
@@ -288,4 +272,4 @@ const FeaturesPreview = () => {
   );
 };
 
-export default FeaturesPreview;
+export default FeaturesOverview;
