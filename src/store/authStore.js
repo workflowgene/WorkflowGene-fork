@@ -238,7 +238,7 @@ const useAuthStore = create((set, get) => ({
         canManageSettings: true,
         canAccessAllData: true,
         canAccessCMS: true,
-        canManageSystem: true
+        canManageSystem: true,
         canManageIntegrations: true,
         canViewSystemHealth: true,
         canManageErrorLogs: true
@@ -252,7 +252,7 @@ const useAuthStore = create((set, get) => ({
         canManageSettings: true,
         canAccessAllData: false,
         canAccessCMS: false,
-        canManageSystem: false
+        canManageSystem: false,
         canManageIntegrations: true,
         canViewSystemHealth: false,
         canManageErrorLogs: false
@@ -266,7 +266,7 @@ const useAuthStore = create((set, get) => ({
         canManageSettings: false,
         canAccessAllData: false,
         canAccessCMS: false,
-        canManageSystem: false
+        canManageSystem: false,
         canManageIntegrations: true,
         canViewSystemHealth: false,
         canManageErrorLogs: false
@@ -280,7 +280,7 @@ const useAuthStore = create((set, get) => ({
         canManageSettings: false,
         canAccessAllData: false,
         canAccessCMS: false,
-        canManageSystem: false
+        canManageSystem: false,
         canManageIntegrations: false,
         canViewSystemHealth: false,
         canManageErrorLogs: false
