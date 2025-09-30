@@ -6,6 +6,8 @@ import DashboardOverview from './components/DashboardOverview';
 import IndustryDashboard from './components/IndustryDashboard';
 import SystemHealthDashboard from '../../components/admin/SystemHealthDashboard';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import Icon from '../../components/AppIcon';
+import Button from '../../components/ui/Button';
 
 const Dashboard = () => {
   const { user, profile, loading, initialized, error } = useAuth();
@@ -33,6 +35,7 @@ const Dashboard = () => {
       </DashboardLayout>
     );
   }
+
   // Handle case: user exists but profile is missing
   if (user && !profile) {
     return (
@@ -82,7 +85,7 @@ const Dashboard = () => {
     console.log('Rendering dashboard for role:', profile?.role);
     
     if (profile?.role === 'super_admin') {
-      return <SystemHealthDashboard />;
+      return <DashboardOverview />;
     }
 
     const industry = profile?.organization?.industry || profile?.industry;

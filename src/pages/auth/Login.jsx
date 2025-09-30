@@ -48,7 +48,12 @@ const Login = () => {
         console.log('Login successful for:', formData.email);
         // Small delay to allow auth state to update
         setTimeout(() => {
-          navigate(from, { replace: true });
+          // Role-based redirect
+          if (formData.email === 'superadmin@workflowgene.cloud') {
+            navigate('/dashboard', { replace: true });
+          } else {
+            navigate(from, { replace: true });
+          }
         }, 500);
       } else {
         throw new Error(result.error || 'Login failed');

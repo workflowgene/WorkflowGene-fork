@@ -35,21 +35,33 @@ const DashboardLayout = ({ children }) => {
       roles: ['super_admin', 'org_admin', 'manager']
     },
     {
+      name: 'Team',
+      path: '/dashboard/team',
+      icon: 'Users',
+      roles: ['super_admin', 'org_admin']
+    },
+    {
+      name: 'Integrations',
+      path: '/dashboard/integrations',
+      icon: 'Plug',
+      roles: ['super_admin', 'org_admin', 'manager']
+    },
+    {
       name: 'CMS Builder',
       path: '/dashboard/cms',
       icon: 'Layout',
       roles: ['super_admin']
     },
     {
-      name: 'Users',
-      path: '/dashboard/users',
-      icon: 'Users',
-      roles: ['super_admin', 'org_admin']
-    },
-    {
       name: 'Organizations',
       path: '/dashboard/organizations',
       icon: 'Building2',
+      roles: ['super_admin']
+    },
+    {
+      name: 'System Health',
+      path: '/dashboard/system-health',
+      icon: 'Activity',
       roles: ['super_admin']
     },
     {

@@ -288,27 +288,55 @@ const DashboardOverview = () => {
               Ready to Get Started?
             </h2>
             <p className="text-text-secondary mb-8 max-w-2xl mx-auto">
-              Create your first workflow to begin automating your business processes. 
-              Choose from our template library or build from scratch.
+              {profile?.role === 'super_admin' 
+                ? 'Welcome to the super admin dashboard. Manage the entire platform from here.'
+                : 'Create your first workflow to begin automating your business processes. Choose from our template library or build from scratch.'
+              }
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                variant="default" 
-                size="lg"
-                iconName="Plus"
-                iconPosition="left"
-                className="btn-organic"
-              >
-                Create First Workflow
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                iconName="FileTemplate"
-                iconPosition="left"
-              >
-                Browse Templates
-              </Button>
+              {profile?.role === 'super_admin' ? (
+                <>
+                  <Button 
+                    variant="default" 
+                    size="lg"
+                    iconName="Activity"
+                    iconPosition="left"
+                    className="btn-organic"
+                    onClick={() => window.location.href = '/dashboard/system-health'}
+                  >
+                    View System Health
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="lg"
+                    iconName="Layout"
+                    iconPosition="left"
+                    onClick={() => window.location.href = '/dashboard/cms'}
+                  >
+                    Manage Website
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button 
+                    variant="default" 
+                    size="lg"
+                    iconName="Plus"
+                    iconPosition="left"
+                    className="btn-organic"
+                  >
+                    Create First Workflow
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="lg"
+                    iconName="FileTemplate"
+                    iconPosition="left"
+                  >
+                    Browse Templates
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

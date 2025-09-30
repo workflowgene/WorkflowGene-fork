@@ -129,7 +129,7 @@ const useAuthStore = create((set, get) => ({
                 email_verified: true,
                 first_name: 'Super',
                 last_name: 'Admin',
-                organization_id: null,
+                organization_id: null, // Super admin doesn't belong to any org
                 updated_at: new Date().toISOString()
               })
               .eq('id', user.id);
@@ -239,6 +239,9 @@ const useAuthStore = create((set, get) => ({
         canAccessAllData: true,
         canAccessCMS: true,
         canManageSystem: true
+        canManageIntegrations: true,
+        canViewSystemHealth: true,
+        canManageErrorLogs: true
       },
       org_admin: {
         canManageUsers: true,
@@ -250,6 +253,9 @@ const useAuthStore = create((set, get) => ({
         canAccessAllData: false,
         canAccessCMS: false,
         canManageSystem: false
+        canManageIntegrations: true,
+        canViewSystemHealth: false,
+        canManageErrorLogs: false
       },
       manager: {
         canManageUsers: false,
@@ -261,6 +267,9 @@ const useAuthStore = create((set, get) => ({
         canAccessAllData: false,
         canAccessCMS: false,
         canManageSystem: false
+        canManageIntegrations: true,
+        canViewSystemHealth: false,
+        canManageErrorLogs: false
       },
       user: {
         canManageUsers: false,
@@ -272,6 +281,9 @@ const useAuthStore = create((set, get) => ({
         canAccessAllData: false,
         canAccessCMS: false,
         canManageSystem: false
+        canManageIntegrations: false,
+        canViewSystemHealth: false,
+        canManageErrorLogs: false
       }
     };
 

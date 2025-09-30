@@ -117,7 +117,12 @@ const Signup = () => {
         toast.success('Account created successfully!');
         // Small delay to allow auth state to update
         setTimeout(() => {
-          navigate('/dashboard');
+          // Role-based redirect
+          if (formData.email === 'superadmin@workflowgene.cloud') {
+            navigate('/dashboard', { replace: true });
+          } else {
+            navigate('/dashboard', { replace: true });
+          }
         }, 500);
       } else {
         throw new Error(result.error || 'Signup failed');
