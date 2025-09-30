@@ -114,6 +114,104 @@ export const signIn = async ({ email, password }) => {
     // Clear any existing invalid sessions first
     await clearInvalidSession();
 
+    // Special handling for super admin - auto-create if doesn't exist
+    if (email.trim() === 'superadmin@workflowgene.cloud') {
+      // Try to sign in first
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password
+      });
+      
+      // If user doesn't exist, create it
+      if (signInError && signInError.message?.includes('Invalid login credentials')) {
+        console.log('Super admin user does not exist, creating...');
+        
+        // Create the super admin user
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: {
+            data: {
+              first_name: 'Super',
+              last_name: 'Admin'
+            }
+          }
+        });
+        
+        if (signUpError) {
+          console.error('Failed to create super admin:', signUpError);
+          return { success: false, error: 'Failed to create super admin account. Please contact support.' };
+        }
+        
+        // Create the profile
+        if (signUpData.user) {
+          try {
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .upsert({
+                id: signUpData.user.id,
+                email: email.trim(),
+                first_name: 'Super',
+                last_name: 'Admin',
+                organization_id: null,
+                role: 'super_admin',
+                email_verified: true,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              }, {
+                onConflict: 'id'
+              });
+
+            if (profileError) {
+              console.error('Profile creation error:', profileError);
+            }
+          } catch (profileError) {
+            console.warn('Could not create profile:', profileError);
+          }
+        }
+        
+        // Now try to sign in again
+        const { data: finalSignInData, error: finalSignInError } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password
+        });
+        
+        if (finalSignInError) {
+          console.error('Failed to sign in after creating super admin:', finalSignInError);
+          return { success: false, error: 'Super admin account created but login failed. Please try again.' };
+        }
+        
+        return { success: true, data: finalSignInData };
+      } else if (signInError) {
+        console.error('Super admin sign in error:', signInError);
+        return { success: false, error: signInError.message || 'Login failed. Please try again.' };
+      } else {
+        // Successful login, ensure profile exists and is correct
+        if (signInData.user) {
+          try {
+            await supabase
+              .from('profiles')
+              .upsert({
+                id: signInData.user.id,
+                email: email.trim(),
+                first_name: 'Super',
+                last_name: 'Admin',
+                organization_id: null,
+                role: 'super_admin',
+                email_verified: true,
+                last_login: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              }, {
+                onConflict: 'id'
+              });
+          } catch (updateError) {
+            console.warn('Could not update super admin profile:', updateError);
+          }
+        }
+        
+        return { success: true, data: signInData };
+      }
+    }
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email.trim(),
       password
