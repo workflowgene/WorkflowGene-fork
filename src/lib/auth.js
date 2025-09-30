@@ -107,7 +107,7 @@ export const getCurrentProfile = async () => {
 // ✅ Sign in user with improved error handling
 export const signIn = async ({ email, password }) => {
   if (!isSupabaseConfigured()) {
-    throw new Error('Authentication service not configured');
+    return { success: false, error: 'Authentication service not configured. Please check your Supabase configuration.' };
   }
 
   try {
@@ -121,7 +121,20 @@ export const signIn = async ({ email, password }) => {
     
     if (error) {
       console.error('Sign in error:', error);
-      throw error;
+      
+      // Handle specific database errors
+      if (error.message?.includes('Database error granting user')) {
+        return { 
+          success: false, 
+          error: 'Database connection issue. Please try again later or contact support if the problem persists.' 
+        };
+      }
+      
+      if (error.message?.includes('Invalid login credentials')) {
+        return { success: false, error: 'Invalid email or password. Please check your credentials and try again.' };
+      }
+      
+      return { success: false, error: error.message || 'Login failed. Please try again.' };
     }
     
     // Update last login timestamp
@@ -150,7 +163,7 @@ export const signIn = async ({ email, password }) => {
 // ✅ Sign up user with improved organization handling
 export const signUp = async ({ email, password, firstName, lastName, organizationName, industry, companySize }) => {
   if (!isSupabaseConfigured()) {
-    throw new Error('Authentication service not configured');
+    return { success: false, error: 'Authentication service not configured. Please check your Supabase configuration.' };
   }
 
   try {
@@ -169,7 +182,18 @@ export const signUp = async ({ email, password, firstName, lastName, organizatio
       }
     });
 
-    if (authError) throw authError;
+    if (authError) {
+      console.error('Sign up error:', authError);
+      
+      if (authError.message?.includes('Database error')) {
+        return { 
+          success: false, 
+          error: 'Database connection issue. Please try again later or contact support if the problem persists.' 
+        };
+      }
+      
+      return { success: false, error: authError.message || 'Signup failed. Please try again.' };
+    }
 
     if (authData.user) {
       // Create organization if provided

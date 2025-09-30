@@ -125,7 +125,8 @@ const Signup = () => {
           }
         }, 500);
       } else {
-        throw new Error(result.error || 'Signup failed');
+        console.error('Signup failed:', result.error);
+        toast.error(result.error || 'Signup failed. Please try again.');
       }
     } catch (error) {
       console.error('Signup error:', error);

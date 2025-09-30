@@ -56,7 +56,8 @@ const Login = () => {
           }
         }, 500);
       } else {
-        throw new Error(result.error || 'Login failed');
+        console.error('Login failed:', result.error);
+        toast.error(result.error || 'Login failed. Please check your credentials.');
       }
     } catch (error) {
       console.error('Login error:', error);

@@ -12,8 +12,14 @@ export const supabase = createClient(
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
-      flowType: 'pkce'
+      flowType: 'pkce',
+      debug: false
     },
+    global: {
+      headers: {
+        'X-Client-Info': 'workflowgene-cloud'
+      }
+    }
   }
 );
 
