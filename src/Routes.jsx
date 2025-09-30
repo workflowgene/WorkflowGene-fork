@@ -19,6 +19,10 @@ import Analytics from './pages/dashboard/Analytics';
 import Profile from './pages/dashboard/Profile';
 import Settings from './pages/dashboard/Settings';
 import CMS from './pages/dashboard/CMS';
+import Team from './pages/dashboard/Team';
+import Organizations from './pages/dashboard/Organizations';
+import SystemHealth from './pages/dashboard/SystemHealth';
+import Integrations from './pages/dashboard/Integrations';
 
 // Existing pages
 import Careers from './pages/careers';
@@ -28,7 +32,7 @@ import Privacy from './pages/privacy';
 import Terms from './pages/terms';
 import APIDocumentation from './pages/api';
 import Status from './pages/status';
-import Integrations from './pages/integrations';
+import IntegrationsPage from './pages/integrations';
 import Templates from './pages/templates';
 import Documentation from './pages/documentation';
 import Support from './pages/support';
@@ -40,7 +44,7 @@ import Compliance from './pages/compliance';
 import Pricing from './pages/pricing';
 import ResourcesPage from './pages/resources';
 import FeaturesPage from './pages/features';
-import Industries from './pages/industries';
+import IndustriesPage from './pages/industries';
 import About from './pages/about';
 import Homepage from './pages/homepage';
 import Contact from './pages/contact';
@@ -64,7 +68,7 @@ const Routes = () => {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/features" element={<FeaturesPage />} />
-            <Route path="/industries" element={<Industries />} />
+            <Route path="/industries" element={<IndustriesPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/careers" element={<Careers />} />
@@ -74,7 +78,7 @@ const Routes = () => {
             <Route path="/terms" element={<Terms />} />
             <Route path="/api" element={<APIDocumentation />} />
             <Route path="/status" element={<Status />} />
-            <Route path="/integrations" element={<Integrations />} />
+            <Route path="/integrations" element={<IntegrationsPage />} />
             <Route path="/templates" element={<Templates />} />
             <Route path="/documentation" element={<Documentation />} />
             <Route path="/support" element={<Support />} />
@@ -108,6 +112,26 @@ const Routes = () => {
             <Route path="/dashboard/analytics" element={
               <ProtectedRoute requiredRoles={['super_admin', 'org_admin', 'manager']}>
                 <Analytics />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/team" element={
+              <ProtectedRoute requiredRoles={['super_admin', 'org_admin']}>
+                <Team />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/integrations" element={
+              <ProtectedRoute requiredRoles={['super_admin', 'org_admin', 'manager']}>
+                <Integrations />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/organizations" element={
+              <ProtectedRoute requiredRoles={['super_admin']}>
+                <Organizations />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/system-health" element={
+              <ProtectedRoute requiredRoles={['super_admin']}>
+                <SystemHealth />
               </ProtectedRoute>
             } />
             <Route path="/dashboard/profile" element={

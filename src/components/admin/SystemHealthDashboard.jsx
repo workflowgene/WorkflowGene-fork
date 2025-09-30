@@ -236,7 +236,115 @@ const SystemHealthDashboard = () => {
       </div>
 
       {/* Key Metrics */}
-      {/* ... rest of your code unchanged ... */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-card rounded-genetic-lg p-6 shadow-organic-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-success/10 rounded-genetic-md flex items-center justify-center">
+              <Icon name="Activity" size={24} className="text-success" />
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-success">{systemMetrics.uptime}%</div>
+              <div className="text-sm text-text-secondary">Uptime</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-card rounded-genetic-lg p-6 shadow-organic-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-primary/10 rounded-genetic-md flex items-center justify-center">
+              <Icon name="Zap" size={24} className="text-primary" />
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-primary">{systemMetrics.responseTime}ms</div>
+              <div className="text-sm text-text-secondary">Response Time</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-card rounded-genetic-lg p-6 shadow-organic-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-warning/10 rounded-genetic-md flex items-center justify-center">
+              <Icon name="AlertTriangle" size={24} className="text-warning" />
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-warning">{systemMetrics.errorRate}%</div>
+              <div className="text-sm text-text-secondary">Error Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-card rounded-genetic-lg p-6 shadow-organic-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-accent/10 rounded-genetic-md flex items-center justify-center">
+              <Icon name="Users" size={24} className="text-accent" />
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-accent">{systemMetrics.activeUsers.toLocaleString()}</div>
+              <div className="text-sm text-text-secondary">Active Users</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Service Status */}
+      <div className="bg-card rounded-genetic-lg p-6 shadow-organic-sm">
+        <h2 className="text-xl font-semibold text-text-primary mb-6">Service Status</h2>
+        <div className="space-y-4">
+          {services.map((service, index) => (
+            <div key={index} className="flex items-center justify-between p-4 bg-surface rounded-genetic-md">
+              <div className="flex items-center space-x-3">
+                <Icon 
+                  name={getStatusIcon(service.status)} 
+                  size={20} 
+                  className={getStatusColor(service.status)} 
+                />
+                <div>
+                  <h3 className="font-medium text-text-primary">{service.name}</h3>
+                  <p className="text-sm text-text-secondary capitalize">{service.status}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-medium text-text-primary">{service.uptime}%</div>
+                <div className="text-xs text-text-secondary">{service.responseTime}ms avg</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Error Logs */}
+      <div className="bg-card rounded-genetic-lg p-6 shadow-organic-sm">
+        <h2 className="text-xl font-semibold text-text-primary mb-6">Recent Error Logs</h2>
+        <div className="space-y-3">
+          {errorLogs.map((log) => (
+            <div key={log.id} className="flex items-start justify-between p-4 border border-border rounded-genetic-md">
+              <div className="flex items-start space-x-3">
+                <Icon 
+                  name={log.level === 'error' ? 'XCircle' : 'AlertTriangle'} 
+                  size={16} 
+                  className={getLogLevelColor(log.level)} 
+                />
+                <div>
+                  <h4 className="font-medium text-text-primary">{log.message}</h4>
+                  <p className="text-sm text-text-secondary">{log.service}</p>
+                  <p className="text-xs text-text-secondary">{formatTimestamp(log.timestamp)}</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                {log.resolved ? (
+                  <span className="px-2 py-1 bg-success/10 text-success text-xs rounded-full">
+                    Resolved
+                  </span>
+                ) : (
+                  <Button variant="outline" size="sm">
+                    Resolve
+                  </Button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

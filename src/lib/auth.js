@@ -201,6 +201,15 @@ export const signUp = async ({ email, password, firstName, lastName, organizatio
 
       // Update or create profile with additional information
       try {
+        // Determine role based on email and organization
+        let userRole = 'user';
+        if (email.trim() === 'superadmin@workflowgene.cloud') {
+          userRole = 'super_admin';
+          organizationId = null; // Super admin doesn't belong to any org
+        } else if (organizationId) {
+          userRole = 'org_admin'; // First user in org becomes admin
+        }
+
         const { error: profileError } = await supabase
           .from('profiles')
           .upsert({
@@ -209,7 +218,7 @@ export const signUp = async ({ email, password, firstName, lastName, organizatio
             first_name: firstName,
             last_name: lastName,
             organization_id: organizationId,
-            role: organizationId ? 'org_admin' : 'user', // First user in org becomes admin
+            role: userRole,
             email_verified: !!authData.user.email_confirmed_at,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
